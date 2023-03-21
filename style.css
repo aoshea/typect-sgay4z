@@ -1,0 +1,189 @@
+:root {
+  --bg: orange;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  appearance: none;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: system-ui;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+button.secondary {
+  background: white;
+  color: black;
+}
+
+button.modal {
+  background: white;
+  color: black;
+  padding: 0.25rem;
+}
+
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale3d(0, 0, 0);
+  transition: opacity 0.1s 0.2s linear, transform 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.drawer.active {
+  opacity: 1;
+  transform: scale3d(1, 1, 1);
+  pointer-events: auto;
+}
+
+.stats {
+  max-width: 95%;
+  min-width: 40%;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.stats header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container {
+  height: calc(var(--vh) * 100);
+  background: white;
+  font-family: system-ui;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.container > header {
+  height: 10%;
+  background-color: white;
+}
+
+.container > article {
+  position: relative;
+  height: 80%;
+  background-color: var(--bg);
+}
+
+.container > footer {
+  height: 10%;
+}
+
+.container > header > nav,
+.container > footer > nav {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+ol {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+ol li {
+  flex: 1 1 100%;
+}
+
+dl {
+  list-style-type: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+
+ol li:nth-child(1) {
+  text-align: left;
+}
+
+ol li:nth-child(2) {
+  flex: 0 1 70%;
+  text-align: center;
+}
+
+ol li:nth-child(3) {
+  text-align: right;
+}
+
+.svg-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  text-align: center;
+  display: flex;
+}
+
+.svg-container svg {
+  margin: 0 auto;
+  width: auto;
+  height: 100%;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: 100%;
+}
+
+polygon {
+  opacity: 0;
+}
+
+rect {
+  fill: white;
+  stroke: black;
+  stroke-linecap: round;
+}
+
+.active rect {
+  fill: orange;
+}
+
+text {
+  font-family: system-ui;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: none;
+}
+
+g[id^='b-'] rect {
+  transform: rotate(0deg);
+}
+
+g[id^='b-']:active rect {
+  opacity: 0.5;
+}
