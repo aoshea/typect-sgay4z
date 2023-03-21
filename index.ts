@@ -1,6 +1,45 @@
 // Import stylesheets
 import './style.css';
 
+function TileView(position, handler) {
+  this.position = position;
+  this.handler = handler;
+  this.root_el = document.querySelector(this.getKey());
+  this.text_el = this.root_el.querySelector('text');
+  this.addListeners(handler);
+}
+
+TileView.prototype.getKey = function () {
+  return `g#b-${this.position}`;
+};
+
+TileView.prototype.addListeners = function (handler) {
+  this.root_el.addEventListener('mousedown', handler, false);
+  this.root_el.addEventListener('mouseup', handler, false);
+  this.root_el.addEventListener('touchstart', handler, false);
+  this.root_el.addEventListener('touchend', handler, false);
+};
+
+TileView.prototype.drawText = function (char) {
+  this.text_el.textContent = char;
+};
+
+TileView.prototype.setState = function (class_name, is_active) {
+  const fn = is_active ? 'add' : 'remove';
+  this.root_el.classList[fn](class_name);
+};
+
+TileView.prototype.drawState = function (
+  pressed: boolean,
+  char: string,
+  char_in_use: boolean,
+  hinted: boolean
+) {
+  this.setState('pressed', pressed);
+  this.setState('active', char);
+  this.setState('in-use', char_in_use);
+  this.setState('hinted', hinted);
+};
 
 // Will be set by template
 window.ZZ_INFO =
@@ -11,6 +50,8 @@ const game = {
   // physics constants
   friction: 0.999975,
   rest: 28,
+  // is touch screen
+  touch: false,
 };
 
 main(game);
@@ -20,6 +61,7 @@ function main(g) {
   addListeners();
   initWordsets(g);
   initAnswers(g);
+  initTiles(g);
   console.log(g);
 }
 
@@ -84,6 +126,41 @@ function initAnswers(g) {
   }
 }
 
+function initTiles(g) {
+  const tiles = [];
+  const tile_view_map = {};
+
+  for (let i = 0; i < g.max_chars; ++i) {
+    const tile = {};
+    const tile_view = new TileView(i, handler);
+    tiles.push(tile);
+    tile_view_map[tile_view.getKey()] = tile_view;
+  }
+  g.tiles = tiles;
+  g.tile_view_map = tile_view_map;
+}
+
+function handler(e) {
+  e.stopPropagation();
+  switch (e.type) {
+    case 'touchstart':
+      game.touch = true;
+      break;
+    case 'touchend':
+      if (game.touch) {
+        // handleInput(e.currentTarget);
+      }
+      break;
+    case 'mouseup':
+      if (!game.touch) {
+        // handleInput(e.currentTarget);
+      }
+      break;
+    default:
+      console.log('unhandled?', e.type);
+  }
+}
+
 // Define classes
 /*
 // Tile class
@@ -112,45 +189,7 @@ Tile.prototype.update = function () {
 };
 
 // Tile element
-function TileView(position: number, handler) {
-  this.position = position;
-  this.handler = handler;
-  this.root_el = document.querySelector(this.getKey());
-  this.text_el = this.root_el.querySelector('text');
-  this.addListeners(handler);
-}
 
-TileView.prototype.getKey = function () {
-  return `g#b-${this.position}`;
-};
-
-TileView.prototype.addListeners = function (handler) {
-  this.root_el.addEventListener('mousedown', handler, false);
-  this.root_el.addEventListener('mouseup', handler, false);
-  this.root_el.addEventListener('touchstart', handler, false);
-  this.root_el.addEventListener('touchend', handler, false);
-};
-
-TileView.prototype.drawText = function (char) {
-  this.text_el.textContent = char;
-};
-
-TileView.prototype.setState = function (class_name, is_active) {
-  const fn = is_active ? 'add' : 'remove';
-  this.root_el.classList[fn](class_name);
-};
-
-TileView.prototype.drawState = function (
-  pressed: boolean,
-  char: string,
-  char_in_use: boolean,
-  hinted: boolean
-) {
-  this.setState('pressed', pressed);
-  this.setState('active', char);
-  this.setState('in-use', char_in_use);
-  this.setState('hinted', hinted);
-};
 
 // point class
 function Point(x, y) {
