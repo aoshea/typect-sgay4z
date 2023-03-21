@@ -1,7 +1,91 @@
 // Import stylesheets
 import './style.css';
 
+
+// Will be set by template
+window.ZZ_INFO =
+  'aeg|aegr|aegrs|adegrs|abdegrs|abdegirs,age|gear|rage|gears|rages|sarge|grades|badgers|abridges|brigades';
+
+const game = {
+  info: window.ZZ_INFO,
+  // physics constants
+  friction: 0.999975,
+  rest: 28,
+};
+
+main(game);
+
+function main(g) {
+  setLayoutHeight();
+  addListeners();
+  initWordsets(g);
+  initAnswers(g);
+  console.log(g);
+}
+
+function addListeners() {
+  window.addEventListener('resize', setLayoutHeight);
+  document
+    .querySelector('button[name="stats"]')
+    .addEventListener('click', handleClickStats, true);
+  document
+    .querySelector('button[name="close-drawer"]')
+    .addEventListener('click', handleClickStats, true);
+}
+
+function setLayoutHeight() {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+function handleClickStats() {
+  const drawer = document.querySelector('.drawer');
+  drawer.classList.toggle('active');
+}
+
+function initWordsets(g) {
+  let max_chars = 0;
+  const wordsets = g.info.split(',')[0].split('|');
+  const ordered = wordsets.slice(0, 1);
+  for (let i = 1; i < wordsets.length; ++i) {
+    const x = wordsets[i];
+    let prev = ordered[i - 1];
+    const chars = x.split('');
+    for (let j = 0; j < chars.length; ++j) {
+      const ch = chars[j];
+      if (prev.indexOf(ch) === -1) {
+        prev = prev + ch;
+      }
+    }
+    if (prev.length > max_chars) {
+      max_chars = prev.length;
+    }
+    ordered.push(prev);
+  }
+  g.wordsets = ordered;
+  g.max_chars = max_chars;
+}
+
+function initAnswers(g) {
+  const answers = g.info.split(',')[1].split('|');
+  g.answers = groupAnswersByLen(answers);
+
+  function groupAnswersByLen(answers) {
+    const result = new Map();
+    for (let i = 0; i < answers.length; ++i) {
+      const len = answers[i].length;
+      if (result.has(len)) {
+        result.get(len).push(answers[i]);
+      } else {
+        result.set(len, [answers[i]]);
+      }
+    }
+    return result;
+  }
+}
+
 // Define classes
+/*
 // Tile class
 function Tile(char_index: number) {
   this.char_index = char_index;
@@ -132,87 +216,7 @@ function Blob(p, char) {
 Blob.prototype.update = function () {
   this.p.update();
 };
-// Will be set by template
-window.ZZ_INFO =
-  'aeg|aegr|aegrs|adegrs|abdegrs|abdegirs,age|gear|rage|gears|rages|sarge|grades|badgers|abridges|brigades';
-
-const game = {
-  info: window.ZZ_INFO,
-  // physics constants
-  friction: 0.999975,
-  rest: 28,
-};
-
-main(game);
-
-function main(g) {
-  setLayoutHeight();
-  addListeners();
-  initWordsets(g);
-  initAnswers(g);
-  console.log(g);
-}
-
-function addListeners() {
-  window.addEventListener('resize', setLayoutHeight);
-  document
-    .querySelector('button[name="stats"]')
-    .addEventListener('click', handleClickStats, true);
-  document
-    .querySelector('button[name="close-drawer"]')
-    .addEventListener('click', handleClickStats, true);
-}
-
-function setLayoutHeight() {
-  let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
-
-function handleClickStats() {
-  const drawer = document.querySelector('.drawer');
-  drawer.classList.toggle('active');
-}
-
-function initWordsets(g) {
-  let max_chars = 0;
-  const wordsets = g.info.split(',')[0].split('|');
-  const ordered = wordsets.slice(0, 1);
-  for (let i = 1; i < wordsets.length; ++i) {
-    const x = wordsets[i];
-    let prev = ordered[i - 1];
-    const chars = x.split('');
-    for (let j = 0; j < chars.length; ++j) {
-      const ch = chars[j];
-      if (prev.indexOf(ch) === -1) {
-        prev = prev + ch;
-      }
-    }
-    if (prev.length > max_chars) {
-      max_chars = prev.length;
-    }
-    ordered.push(prev);
-  }
-  g.wordsets = ordered;
-  g.max_chars = max_chars;
-}
-
-function initAnswers(g) {
-  const answers = g.info.split(',')[1].split('|');
-  g.answers = groupAnswersByLen(answers);
-
-  function groupAnswersByLen(answers) {
-    const result = new Map();
-    for (let i = 0; i < answers.length; ++i) {
-      const len = answers[i].length;
-      if (result.has(len)) {
-        result.get(len).push(answers[i]);
-      } else {
-        result.set(len, [answers[i]]);
-      }
-    }
-    return result;
-  }
-}
+*/
 
 /*
 // constraints

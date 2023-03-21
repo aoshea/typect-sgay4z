@@ -90,7 +90,7 @@ button.modal {
 .container > article {
   position: relative;
   height: 80%;
-  background-color: var(--bg);
+  background-color: transparent;
 }
 
 .container > footer {
@@ -117,6 +117,7 @@ ol {
 
 ol li {
   flex: 1 1 100%;
+  padding: 0.25rem 0.5rem;
 }
 
 dl {
@@ -167,7 +168,15 @@ rect {
   stroke-linecap: round;
 }
 
-.active rect {
+rect + rect {
+  stroke-width: 1.5;
+  stroke: orange;
+  stroke-linecap: butt;
+  fill: transparent;
+  opacity: 0;
+}
+
+.active > rect {
   fill: orange;
 }
 
@@ -184,6 +193,6 @@ g[id^='b-'] rect {
   transform: rotate(0deg);
 }
 
-g[id^='b-']:active rect {
-  opacity: 0.5;
+g[id^='b-']:active rect + rect {
+  opacity: 0.2;
 }
