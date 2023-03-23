@@ -359,7 +359,7 @@ function handleShare() {
         aside_view.textContent = 'SHARE FAILED!' + err;
       });
   } else {
-    const zigga = document.querySelector('textarea#zigga');
+    const zigga = document.querySelector('textarea[name="game-result"]');
     zigga.focus();
     zigga.select();
     document.execCommand('copy');
