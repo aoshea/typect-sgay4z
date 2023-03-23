@@ -14,7 +14,7 @@ Tile.prototype.hint = function () {
 };
 
 Tile.prototype.show = function (getChar) {
-  this.char = getChar(this.char_index);
+  this.char = getChar(this.index);
 };
 
 Tile.prototype.getKey = function (index) {
@@ -75,11 +75,14 @@ const rest = 28;
 let touch = false;
 let input_indices = [];
 let tiles = [];
-let tile_views = [];
+let tile_view_map = {};
+let input_view = null;
 let wordsets = [];
 let answers = new Map();
 let max_chars = 0;
 let t = 0;
+let game_level = 0;
+let hints = 3;
 
 main();
 
@@ -90,9 +93,10 @@ function main() {
   max_chars = getMaxChars(wordsets);
   answers = initAnswers(info);
   tiles = initTiles(max_chars);
-  tile_views = initTileViews(max_chars, inputHandler);
+  tile_view_map = initTileViews(max_chars, inputHandler);
+  input_view = document.querySelector('#text-input');
 
-  console.log(tile_views);
+  console.log(input_view);
 
   // start tick
   gameloop();
@@ -106,6 +110,18 @@ function addListeners() {
   document
     .querySelector('button[name="close-drawer"]')
     .addEventListener('click', handleClickStats, true);
+  document
+    .querySelector('button[name="delete"]')
+    .addEventListener('click', handleDelete, false);
+  document
+    .querySelector('button[name="shuffle"]')
+    .addEventListener('click', handleShuffle, false);
+  document
+    .querySelector('button[name="hint"]')
+    .addEventListener('click', handleHint, false);
+  document
+    .querySelector('button[name="enter"]')
+    .addEventListener('click', handleEnter, false);
 }
 
 function setLayoutHeight() {
@@ -162,17 +178,20 @@ function initAnswers(info) {
 }
 
 function initTileViews(max_chars, handler) {
-  const tile_views = [];
+  const tile_view_map = {};
   for (let i = 0; i < max_chars; ++i) {
-    tile_views.push(new TileView(i, handler));
+    const view = new TileView(i, handler);
+    tile_view_map[view.getKey()] = view;
   }
-  return tile_views;
+  return tile_view_map;
 }
 
 function initTiles(max_chars) {
   const tiles = [];
   for (let i = 0; i < max_chars; ++i) {
-    tiles.push(new Tile(i));
+    const tile = new Tile(i);
+    tile.show(getChar);
+    tiles.push(tile);
   }
   return tiles;
 }
@@ -185,18 +204,123 @@ function inputHandler(e) {
       break;
     case 'touchend':
       if (touch) {
-        // handleInput(e.currentTarget);
+        handleClick(e.currentTarget);
       }
       break;
     case 'mouseup':
       if (!touch) {
-        // handleInput(e.currentTarget);
+        handleClick(e.currentTarget);
       }
       break;
     default:
-      console.log('unhandled?', e.type);
+      return false;
   }
 }
+
+function handleClick(target) {
+  const elementPosition = parseInt(target.id.split('-')[1], 10);
+  const tile = tiles[elementPosition];
+  tile.is_pressed = true;
+  if (input_indices.indexOf(tile.index) === -1) {
+    addInput(tile.index);
+  }
+}
+
+function addInput(char_index: number): boolean {
+  if (input_indices.length < max_chars) {
+    input_indices.push(char_index);
+    return true;
+  }
+  return false;
+}
+
+function handleDelete() {
+  if (input_indices.length > 0) {
+    input_indices.pop();
+  }
+}
+
+function getAvailableTileCount(list) {
+  return list.reduce((prev, curr) => (curr.char !== '' ? prev + 1 : prev), 0);
+}
+
+function randomizeTiles(list) {
+  let arr = list.slice(0);
+  let n = getAvailableTileCount(arr);
+  let temp;
+  let random_index: number;
+  while (n) {
+    random_index = Math.floor(Math.random() * n--);
+    temp = arr[n];
+    arr[n] = arr[random_index];
+    arr[random_index] = temp;
+  }
+  return arr;
+}
+
+function handleShuffle() {
+  const curr = tiles.map((t) => t.char).join('');
+  const answer = answers.get(curr.length);
+
+  let iterations = 0;
+  let max_iterations = 100;
+  while (iterations < max_iterations) {
+    const randomized = randomizeTiles(tiles);
+    const randomized_text = randomized.map((t) => t.char).join('');
+    if (randomized_text !== curr && answer.indexOf(randomized_text) === -1) {
+      tiles = randomized;
+      break;
+    }
+    ++iterations;
+  }
+}
+
+function advanceLevel(is_hint = false) {
+  if (game_level < max_chars - 3) {
+    ++game_level;
+    const tile = tiles[game_level + 2];
+    tile.show(getChar);
+
+    if (!is_hint) {
+      const plumtexts = [
+        'Good!',
+        'Great!',
+        'Amazing!',
+        'Superb!',
+        'Incredible!',
+      ];
+      // plumEl.textContent = plumtexts[game_level - 1];
+      // plumEl.classList.add('show');
+    } else {
+      tile.hint();
+    }
+  } else {
+    // plumEl.textContent = 'You win!';
+    // plumEl.classList.add('show');
+  }
+}
+
+function handleEnter() {
+  const len = game_level + 3;
+  const game_level_answers = answers.get(len);
+  console.log(game_level_answers);
+  const input_value = getInputValue();
+  if (game_level_answers.indexOf(input_value.toLowerCase()) !== -1) {
+    advanceLevel();
+  }
+  clearInput();
+}
+
+function handleHint() {
+  if (hints > 0) {
+    if (game_level < 5) {
+      advanceLevel(true);
+      clearInput();
+      --hints;
+    }
+  }
+}
+
 // loop
 function gameloop() {
   window.requestAnimationFrame(gameloop);
@@ -215,7 +339,7 @@ function update() {
 function draw() {
   for (let i = 0; i < tiles.length; ++i) {
     const tile = tiles[i];
-    const tile_view = tile_views[tile.index];
+    const tile_view = tile_view_map[tile.getKey(i)];
 
     tile_view.drawText(tile.char);
     tile_view.drawState(
@@ -231,21 +355,31 @@ function draw() {
 }
 
 function renderUI() {
-  /*
   const hint_btn = document.querySelector('button[name="hint"]');
   hint_btn.textContent = `HINT - ${hints}`;
   if (hints === 0) {
     hint_btn.setAttribute('disabled', 'disabled');
   }
-  */
 }
 
 // update input element
 function renderInput() {
-  /*
-  let input_value = getInputValue();
-  inputEl.setAttribute('value', input_value);
-  */
+  input_view.textContent = getInputValue();
+}
+
+function getInputValue() {
+  return input_indices.map(getChar).join('');
+}
+
+function clearInput() {
+  while (input_indices.length > 0) {
+    input_indices.pop();
+  }
+}
+
+// get char by index
+function getChar(i) {
+  return wordsets[game_level].charAt(i);
 }
 
 // Define classes
@@ -383,7 +517,6 @@ function init() {
   const enter_btn = document.querySelector('button[name="enter"]');
   const shuffle_btn = document.querySelector('button[name="shuffle"]');
   const hint_btn = document.querySelector('button[name="hint"]');
-  delete_btn.addEventListener('click', handleDelete, false);
   enter_btn.addEventListener('click', handleEnter, false);
   shuffle_btn.addEventListener('click', handleShuffle, false);
   hint_btn.addEventListener('click', handleHint, false);
@@ -422,39 +555,9 @@ function advanceLevel(is_hint = false) {
   }
 }
 
-// get char by index
-function getChar(i) {
-  const set = ordered_wordsets[game_level];
-  const result = set.charAt(i);
-  return result;
-}
 
-// handle delete
-function handleDelete() {
-  if (input_indices.length > 0) {
-    input_indices.pop();
-  }
-}
 
-function handleEnter() {
-  const len = game_level + 3;
-  const game_level_answers = answers.filter((x) => x.length === len);
-  const input_value = getInputValue();
-  if (game_level_answers.indexOf(input_value.toLowerCase()) !== -1) {
-    advanceLevel();
-  }
-  clearInput();
-}
 
-function handleHint() {
-  if (hints > 0) {
-    if (game_level < 5) {
-      advanceLevel(true);
-      clearInput();
-      --hints;
-    }
-  }
-}
 
 function getAvailableTileCount(list) {
   let count = 0;
@@ -466,44 +569,8 @@ function getAvailableTileCount(list) {
   return count;
 }
 
-function randomizeTiles(list) {
-  let arr = list.slice(0);
-  let n = getAvailableTileCount(arr);
-  let temp;
-  let random_index: number;
-  while (n) {
-    random_index = Math.floor(Math.random() * n--);
-    temp = arr[n];
-    arr[n] = arr[random_index];
-    arr[random_index] = temp;
-  }
-  return arr;
-}
 
-function handleShuffle() {
-  const curr = tiles.map((t) => t.char).join('');
-  const answer = grouped_answers.get(curr.length);
 
-  let iterations = 0;
-  let max_iterations = 100;
-  while (iterations < max_iterations) {
-    const randomized = randomizeTiles(tiles);
-    const randomized_text = randomized.map((t) => t.char).join('');
-    if (randomized_text !== curr && answer.indexOf(randomized_text) === -1) {
-      tiles = randomized;
-      break;
-    }
-    ++iterations;
-  }
-}
-
-function addInput(char_index: number): boolean {
-  if (input_indices.length < MAX_CHARS) {
-    input_indices.push(char_index);
-    return true;
-  }
-  return false;
-}
 
 // handle click
 function handler(e) {
@@ -527,14 +594,6 @@ function handler(e) {
   }
 }
 
-function handleInput(target) {
-  const elementPosition = parseInt(target.id.split('-')[1], 10);
-  const tile = tiles[elementPosition];
-  tile.pressed = true;
-  if (input_indices.indexOf(tile.char_index) === -1) {
-    addInput(tile.char_index);
-  }
-}
 
 // debug looging
 let log = '';
@@ -544,13 +603,4 @@ function debug(message) {
 }
 
 
-function getInputValue() {
-  return input_indices.map(getChar).join('');
-}
-
-function clearInput() {
-  while (input_indices.length > 0) {
-    input_indices.pop();
-  }
-}
 */

@@ -32,6 +32,11 @@ button.secondary {
   color: black;
 }
 
+button.tertiary {
+  background: orange;
+  color: black;
+}
+
 button.modal {
   background: white;
   color: black;
@@ -132,7 +137,7 @@ ol li:nth-child(1) {
 }
 
 ol li:nth-child(2) {
-  flex: 0 1 70%;
+  flex: 0 1 100%;
   text-align: center;
 }
 
@@ -177,8 +182,16 @@ rect + rect {
   opacity: 0;
 }
 
-.active > rect {
+.state--active > rect {
   fill: orange;
+}
+
+.state--in-use > rect {
+  fill: gray;
+}
+
+.state--hinted > rect {
+  fill: transparent;
 }
 
 text {
