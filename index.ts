@@ -83,6 +83,7 @@ let max_chars = 0;
 let t = 0;
 let game_level = 0;
 let hints = 3;
+let plum_view = null;
 
 main();
 
@@ -95,6 +96,7 @@ function main() {
   tiles = initTiles(max_chars);
   tile_view_map = initTileViews(max_chars, inputHandler);
   input_view = document.querySelector('#text-input');
+  plum_view = initPlumView();
 
   console.log(input_view);
 
@@ -129,9 +131,13 @@ function setLayoutHeight() {
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
 
-function handleClickStats() {
+function toggleStats() {
   const drawer = document.querySelector('.drawer');
   drawer.classList.toggle('active');
+}
+
+function handleClickStats() {
+  toggleStats();
 }
 
 function initWordsets(info) {
@@ -194,6 +200,14 @@ function initTiles(max_chars) {
     tiles.push(tile);
   }
   return tiles;
+}
+
+function initPlumView() {
+  const plum_view = document.querySelector('text#plum');
+  plum_view.addEventListener('animationend', () => {
+    plum_view.classList.remove('show');
+  });
+  return plum_view;
 }
 
 function inputHandler(e) {
@@ -276,6 +290,7 @@ function handleShuffle() {
 }
 
 function advanceLevel(is_hint = false) {
+
   if (game_level < max_chars - 3) {
     ++game_level;
     const tile = tiles[game_level + 2];
@@ -283,27 +298,27 @@ function advanceLevel(is_hint = false) {
 
     if (!is_hint) {
       const plumtexts = [
-        'Good!',
-        'Great!',
-        'Amazing!',
-        'Superb!',
-        'Incredible!',
+        'Nice',
+        'Excellent',
+        'Amazing',
+        'Incredible',
+        'Superb',
       ];
-      // plumEl.textContent = plumtexts[game_level - 1];
-      // plumEl.classList.add('show');
+      plum_view.textContent = plumtexts[game_level - 1];
+      plum_view.classList.add('show');
     } else {
       tile.hint();
     }
   } else {
-    // plumEl.textContent = 'You win!';
-    // plumEl.classList.add('show');
+    plum_view.textContent = 'You win';
+    plum_view.classList.add('show');
+    setTimeout(toggleStats, 1000);
   }
 }
 
 function handleEnter() {
   const len = game_level + 3;
   const game_level_answers = answers.get(len);
-  console.log(game_level_answers);
   const input_value = getInputValue();
   if (game_level_answers.indexOf(input_value.toLowerCase()) !== -1) {
     advanceLevel();

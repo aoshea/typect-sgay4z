@@ -207,6 +207,47 @@ text {
   pointer-events: none;
 }
 
+text#plum {
+  fill: black;
+  stroke: none;
+  stroke-width: 0.75;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  font-size: 4px;
+  font-style: italic;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  animation-duration: 3s;
+  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation-delay: 200ms;
+  animation-iteration-count: 1;
+  animation-play-state: running;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+
+text#plum.show {
+  animation-name: showplum;
+}
+
+@keyframes showplum {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  85% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
 g[id^='b-'] rect {
   transform: rotate(0deg);
 }
