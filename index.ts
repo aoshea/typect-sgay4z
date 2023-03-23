@@ -347,8 +347,8 @@ function handleShare() {
 
   const aside_view = document.querySelector('aside');
 
-  if (typeof window.navigator === 'function') {
-    window.navigator
+  try {
+    navigator
       .share(shareData)
       .then((res) => {
         console.log('success', res);
@@ -358,7 +358,9 @@ function handleShare() {
         console.log('share failed', err);
         aside_view.textContent = 'SHARE FAILED!' + err;
       });
-  } else {
+  } catch (e) {
+    console.error(e);
+    aside_view.textContent = 'Error' + e;
     const zigga = document.querySelector('textarea[name="game-result"]');
     zigga.focus();
     zigga.select();
