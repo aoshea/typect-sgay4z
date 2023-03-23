@@ -47,6 +47,13 @@ button.modal {
   padding: 0.25rem;
 }
 
+button.share {
+  margin: 0 auto;
+  background: orange;
+  color: white;
+  font-size: 14px;
+}
+
 .drawer {
   position: absolute;
   top: 0;

@@ -124,6 +124,9 @@ function addListeners() {
   document
     .querySelector('button[name="enter"]')
     .addEventListener('click', handleEnter, false);
+  document
+    .querySelector('button[name="share"]')
+    .addEventListener('click', handleShare, false);
 }
 
 function setLayoutHeight() {
@@ -290,7 +293,6 @@ function handleShuffle() {
 }
 
 function advanceLevel(is_hint = false) {
-
   if (game_level < max_chars - 3) {
     ++game_level;
     const tile = tiles[game_level + 2];
@@ -333,6 +335,35 @@ function handleHint() {
       clearInput();
       --hints;
     }
+  }
+}
+
+function handleShare() {
+  const shareData = {
+    title: 'ZIGGAWORDS',
+    text: 'ZIGGAWORDS GAME 1 🤖👻🟧🟧▪️▫️◾️',
+    url: 'https://ziggawords.com',
+  };
+
+  const aside_view = document.querySelector('aside');
+
+  if (typeof window.navigator === 'function') {
+    window.navigator
+      .share(shareData)
+      .then((res) => {
+        console.log('success', res);
+        aside_view.textContent = 'SHARED!';
+      })
+      .catch((err) => {
+        console.log('share failed', err);
+        aside_view.textContent = 'SHARE FAILED!' + err;
+      });
+  } else {
+    const zigga = document.querySelector('textarea#zigga');
+    zigga.focus();
+    zigga.select();
+    document.execCommand('copy');
+    console.log('copy to clipboard');
   }
 }
 
