@@ -1,6 +1,8 @@
 // Import stylesheets
 import './style.css';
 
+console.log('hint should white out the first letter of current word');
+
 function Tile(index) {
   this.index = index;
   // index of char set is index in array
