@@ -1,6 +1,30 @@
 // Import stylesheets
 import './style.css';
 
+function Tile(index) {
+  this.index = index;
+  // index of char set is index in array
+  // user input pressed?
+  this.is_pressed = false;
+  this.is_hinted = false;
+}
+
+Tile.prototype.hint = function () {
+  this.is_hinted = true;
+};
+
+Tile.prototype.show = function (getChar) {
+  this.char = getChar(this.char_index);
+};
+
+Tile.prototype.getKey = function (index) {
+  return `g#b-${index}`;
+};
+
+Tile.prototype.update = function () {
+  return false;
+};
+
 function TileView(position, handler) {
   this.position = position;
   this.handler = handler;
@@ -30,39 +54,48 @@ TileView.prototype.setState = function (class_name, is_active) {
 };
 
 TileView.prototype.drawState = function (
-  pressed: boolean,
-  char: string,
-  char_in_use: boolean,
-  hinted: boolean
+  is_pressed: boolean,
+  is_char: boolean,
+  is_char_in_use: boolean,
+  is_hinted: boolean
 ) {
-  this.setState('pressed', pressed);
-  this.setState('active', char);
-  this.setState('in-use', char_in_use);
-  this.setState('hinted', hinted);
+  this.setState('state--pressed', is_pressed);
+  this.setState('state--active', is_char);
+  this.setState('state--in-use', is_char_in_use);
+  this.setState('state--hinted', is_hinted);
 };
 
 // Will be set by template
 window.ZZ_INFO =
   'aeg|aegr|aegrs|adegrs|abdegrs|abdegirs,age|gear|rage|gears|rages|sarge|grades|badgers|abridges|brigades';
 
-const game = {
-  info: window.ZZ_INFO,
-  // physics constants
-  friction: 0.999975,
-  rest: 28,
-  // is touch screen
-  touch: false,
-};
+const info = window.ZZ_INFO;
+const friction = 0.99;
+const rest = 28;
+let touch = false;
+let input_indices = [];
+let tiles = [];
+let tile_views = [];
+let wordsets = [];
+let answers = new Map();
+let max_chars = 0;
+let t = 0;
 
-main(game);
+main();
 
-function main(g) {
+function main() {
   setLayoutHeight();
   addListeners();
-  initWordsets(g);
-  initAnswers(g);
-  initTiles(g);
-  console.log(g);
+  wordsets = initWordsets(info);
+  max_chars = getMaxChars(wordsets);
+  answers = initAnswers(info);
+  tiles = initTiles(max_chars);
+  tile_views = initTileViews(max_chars, inputHandler);
+
+  console.log(tile_views);
+
+  // start tick
+  gameloop();
 }
 
 function addListeners() {
@@ -85,9 +118,8 @@ function handleClickStats() {
   drawer.classList.toggle('active');
 }
 
-function initWordsets(g) {
-  let max_chars = 0;
-  const wordsets = g.info.split(',')[0].split('|');
+function initWordsets(info) {
+  const wordsets = info.split(',')[0].split('|');
   const ordered = wordsets.slice(0, 1);
   for (let i = 1; i < wordsets.length; ++i) {
     const x = wordsets[i];
@@ -99,18 +131,21 @@ function initWordsets(g) {
         prev = prev + ch;
       }
     }
-    if (prev.length > max_chars) {
-      max_chars = prev.length;
-    }
     ordered.push(prev);
   }
-  g.wordsets = ordered;
-  g.max_chars = max_chars;
+  return ordered;
 }
 
-function initAnswers(g) {
-  const answers = g.info.split(',')[1].split('|');
-  g.answers = groupAnswersByLen(answers);
+function getMaxChars(wordsets) {
+  return wordsets.reduce(
+    (prev, curr) => (curr.length > prev ? curr.length : prev),
+    0
+  );
+}
+
+function initAnswers(info) {
+  const answers = info.split(',')[1].split('|');
+  return groupAnswersByLen(answers);
 
   function groupAnswersByLen(answers) {
     const result = new Map();
@@ -126,33 +161,35 @@ function initAnswers(g) {
   }
 }
 
-function initTiles(g) {
-  const tiles = [];
-  const tile_view_map = {};
-
-  for (let i = 0; i < g.max_chars; ++i) {
-    const tile = {};
-    const tile_view = new TileView(i, handler);
-    tiles.push(tile);
-    tile_view_map[tile_view.getKey()] = tile_view;
+function initTileViews(max_chars, handler) {
+  const tile_views = [];
+  for (let i = 0; i < max_chars; ++i) {
+    tile_views.push(new TileView(i, handler));
   }
-  g.tiles = tiles;
-  g.tile_view_map = tile_view_map;
+  return tile_views;
 }
 
-function handler(e) {
+function initTiles(max_chars) {
+  const tiles = [];
+  for (let i = 0; i < max_chars; ++i) {
+    tiles.push(new Tile(i));
+  }
+  return tiles;
+}
+
+function inputHandler(e) {
   e.stopPropagation();
   switch (e.type) {
     case 'touchstart':
-      game.touch = true;
+      touch = true;
       break;
     case 'touchend':
-      if (game.touch) {
+      if (touch) {
         // handleInput(e.currentTarget);
       }
       break;
     case 'mouseup':
-      if (!game.touch) {
+      if (!touch) {
         // handleInput(e.currentTarget);
       }
       break;
@@ -160,33 +197,60 @@ function handler(e) {
       console.log('unhandled?', e.type);
   }
 }
+// loop
+function gameloop() {
+  window.requestAnimationFrame(gameloop);
+  update();
+  draw();
+}
+
+// update game
+function update() {
+  for (let i = 0; i < tiles.length; ++i) {
+    tiles[i].update();
+  }
+}
+
+// draw game
+function draw() {
+  for (let i = 0; i < tiles.length; ++i) {
+    const tile = tiles[i];
+    const tile_view = tile_views[tile.index];
+
+    tile_view.drawText(tile.char);
+    tile_view.drawState(
+      tile.is_pressed,
+      tile.char !== '',
+      input_indices.indexOf(tile.index) !== -1,
+      tile.is_hinted
+    );
+  }
+  ++t;
+  renderInput();
+  renderUI();
+}
+
+function renderUI() {
+  /*
+  const hint_btn = document.querySelector('button[name="hint"]');
+  hint_btn.textContent = `HINT - ${hints}`;
+  if (hints === 0) {
+    hint_btn.setAttribute('disabled', 'disabled');
+  }
+  */
+}
+
+// update input element
+function renderInput() {
+  /*
+  let input_value = getInputValue();
+  inputEl.setAttribute('value', input_value);
+  */
+}
 
 // Define classes
 /*
-// Tile class
-function Tile(char_index: number) {
-  this.char_index = char_index;
-  // index of char set is index in array
-  // user input pressed?
-  this.pressed = false;
-  this.hinted = false;
-}
 
-Tile.prototype.hint = function () {
-  this.hinted = true;
-};
-
-Tile.prototype.show = function () {
-  this.char = getChar(this.char_index);
-};
-
-Tile.prototype.getKey = function (index) {
-  return `g#b-${index}`;
-};
-
-Tile.prototype.update = function () {
-  return false;
-};
 
 // Tile element
 
@@ -479,52 +543,6 @@ function debug(message) {
   debugEl.innerHTML = log;
 }
 
-// loop
-function gameloop() {
-  window.requestAnimationFrame(gameloop);
-  update();
-  draw();
-}
-
-// update game
-function update() {
-  for (let i = 0; i < tiles.length; ++i) {
-    tiles[i].update();
-  }
-}
-
-// draw game
-function draw() {
-  for (let i = 0; i < tiles.length; ++i) {
-    const tile = tiles[i];
-    const tile_view = tile_view_map[tile.getKey(i)];
-
-    tile_view.drawText(tile.char);
-    tile_view.drawState(
-      tile.pressed,
-      tile.char,
-      input_indices.indexOf(tile.char_index) !== -1,
-      tile.hinted
-    );
-  }
-  ++t;
-  renderInput();
-  renderUI();
-}
-
-function renderUI() {
-  const hint_btn = document.querySelector('button[name="hint"]');
-  hint_btn.textContent = `HINT - ${hints}`;
-  if (hints === 0) {
-    hint_btn.setAttribute('disabled', 'disabled');
-  }
-}
-
-// update input element
-function renderInput() {
-  let input_value = getInputValue();
-  inputEl.setAttribute('value', input_value);
-}
 
 function getInputValue() {
   return input_indices.map(getChar).join('');
