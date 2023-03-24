@@ -406,7 +406,7 @@ function draw() {
 
 function renderUI() {
   const hint_btn = document.querySelector('button[name="hint"]');
-  hint_btn.textContent = `HINT - ${hints}`;
+  hint_btn.textContent = ` \uFE56 HINT - ${hints}`;
   if (hints === 0) {
     hint_btn.setAttribute('disabled', 'disabled');
   }

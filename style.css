@@ -1,5 +1,12 @@
 :root {
   --bg: orange;
+  --font-stack: Frutiger, 'Frutiger Linotype', Univers, 'Gill Sans',
+    'Gill Sans MT', 'Myriad Pro', Myriad, 'DejaVu Sans Condensed',
+    'Liberation Sans', 'Nimbus Sans L', Tahoma, Geneva, 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
+  --font-size: 10px;
+  --font-size-svg: 8px;
+  --font-weight: 600;
 }
 
 * {
@@ -23,11 +30,11 @@ button {
   appearance: none;
   background: rgba(0, 0, 0, 0.8);
   color: white;
-  border: none;
+  border: 2px solid black;
   border-radius: 4px;
-  font-family: system-ui;
-  font-size: 8px;
-  font-weight: 700;
+  font-family: var(--font-stack);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
   text-transform: uppercase;
 }
 
@@ -37,7 +44,7 @@ button.secondary {
 }
 
 button.tertiary {
-  background: orange;
+  background: white;
   color: black;
 }
 
@@ -93,9 +100,9 @@ button.share {
 .container {
   height: calc(var(--vh) * 100);
   background: white;
-  font-family: system-ui;
-  font-size: 8px;
-  font-weight: 700;
+  font-family: var(--font-stack);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
   text-transform: uppercase;
 }
 
@@ -206,23 +213,24 @@ rect + rect {
 }
 
 text {
-  font-family: system-ui;
-  font-size: 8px;
-  font-weight: 800;
+  font-family: var(--font-stack);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
   text-transform: uppercase;
   user-select: none;
   pointer-events: none;
 }
 
 text#plum {
-  fill: black;
+  fill: orange;
   stroke: none;
   stroke-width: 0.75;
   stroke-linejoin: round;
   stroke-linecap: round;
-  font-size: 4px;
+  font-size: 6px;
   font-style: italic;
-  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: var(--font-stack);
+  font-weight: var(--font-weight);
   animation-duration: 3s;
   animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation-delay: 200ms;
@@ -239,19 +247,23 @@ text#plum.show {
 @keyframes showplum {
   0% {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translate3d(-20px, 0, 0);
+    -webkit-transform: translate3d(-20px, 0, 0);
   }
   15% {
     opacity: 1;
-    transform: translateX(0px);
+    transform: translate3d(0px, 0, 0);
+    -webkit-transform: translate3d(0px, 0, 0);
   }
   85% {
     opacity: 1;
-    transform: translateX(0px);
+    transform: translate3d(0px, 0, 0);
+    -webkit-transform: translate3d(0px, 0, 0);
   }
   100% {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translate3d(20px, 0, 0);
+    -webkit-transform: translate3d(20px, 0, 0);
   }
 }
 
