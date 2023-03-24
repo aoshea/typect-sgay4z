@@ -333,9 +333,33 @@ function handleEnter() {
 function handleHint() {
   if (hints > 0) {
     if (game_level < 5) {
-      advanceLevel(true);
-      clearInput();
-      --hints;
+      // what is the next letter? check input_indices
+      
+      const game_level_answer = answers.get(game_level + 3)[0];
+        // check we are correct
+        for(let i = 0; i < input_indices.length; ++i) {
+          console.log(getChar(input_indices[i]), game_level_answer.charAt(i));
+          if (getChar(input_indices[i]) !== game_level_answer.charAt(i)) {
+            console.log('wrong input, clear it from here on');
+
+            let k = input_indices.length;
+            while(k > i) {
+              input_indices.pop();
+              --k;
+            }
+            break;
+          }
+        }
+        const next_char = game_level_answer.charAt(input_indices.length);
+        console.log('next_char', next_char, game_level_answer);
+        addInput(getCharIndex(next_char));
+        --hints;
+    
+      
+      // then check answer..
+      // the flag hintted letter as hinted
+      // advanceLevel(true);
+      // clearInput();
     }
   }
 }
@@ -430,6 +454,10 @@ function clearInput() {
 // get char by index
 function getChar(i) {
   return wordsets[game_level].charAt(i);
+}
+
+function getCharIndex(char) {
+  return wordsets[game_level].indexOf(char);
 }
 
 // Define classes
