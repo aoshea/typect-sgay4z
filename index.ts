@@ -129,7 +129,8 @@ function updateStats() {
   total_played = window.localStorage.getItem('z-total-played');
   document.querySelector('#total-played').textContent = total_played;
   game_result = `Game ${game_no} ${today_score}\n`;
-  document.querySelector('textarea[name="game-result"]').textContent = game_result;
+  document.querySelector('textarea[name="game-result"]').textContent =
+    game_result;
 }
 
 function addListeners() {
@@ -323,11 +324,10 @@ function advanceLevel() {
 
     const plumtexts = ['Sweet', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
 
-    document.querySelector('text#plum').textContent = plum_texts[game_level - 1];
+    document.querySelector('text#plum').textContent = plumtexts[game_level - 1];
     document.querySelector('animate#plum-animate').beginElement();
     document.querySelector('animate#plum-animate-fade').beginElement();
     document.querySelector('animateTransform#plum-animate-skew').beginElement(); //.show(plumtexts[game_level - 1]);
-
   } else {
     document.querySelector('text#plum').textContent = 'You win';
     setTimeout(toggleStats, 1000);
