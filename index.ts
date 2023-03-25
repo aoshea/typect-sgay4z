@@ -114,6 +114,15 @@ function main() {
   gameloop();
 }
 
+function getStorageItem(key) {
+  const item = window.localStorage.getItem(key);
+  if (item === null || typeof item === 'undefined') {
+    window.localStorage.setItem(key, '0');
+    return '0';
+  }
+  return item;
+}
+
 function buildGameResult(game_no, input_len, max_chars) {
   let a = '\uD83D\uDFE7';
   let b = '\u2B1C';
@@ -127,22 +136,29 @@ function buildGameResult(game_no, input_len, max_chars) {
 
 function updateStats() {
   document.querySelector('#game-no').textContent = `Game ${game_no}`;
-  today_score = '3/8';
+  today_score = 'Result 3/8';
   document.querySelector('#today-score').textContent = today_score;
-  today_hints = `${hints}/3`;
+  today_hints = `Hints ${hints}/3`;
   document.querySelector('#today-hints').textContent = today_hints;
 
-  streak = window.localStorage.getItem('z-streak');
-  best_streak = window.localStorage.getItem('z-best-streak');
+  streak = getStorageItem('z-streak');
+  best_streak = getStorageItem('z-best-streak');
+  total_played = getStorageItem('z-total-played');
+
   current_streak = `Current ${streak}`;
   document.querySelector('#current-streak').textContent = current_streak;
   all_time_streak = `All-time ${best_streak}`;
   document.querySelector('#all-time-streak').textContent = all_time_streak;
-  total_played = window.localStorage.getItem('z-total-played');
-  document.querySelector('#total-played').textContent = total_played;
+
+  document.querySelector(
+    '#total-played'
+  ).textContent = `Played ${total_played}`;
   game_result = `Game ${game_no} ${today_score}\n \uD83D\uDFE7`;
-  document.querySelector('textarea[name="game-result"]').textContent =
-    buildGameResult(game_no, input_indices.length, max_chars);
+  document.querySelector('#share-result').textContent = buildGameResult(
+    game_no,
+    input_indices.length,
+    max_chars
+  );
 }
 
 function addListeners() {
@@ -392,36 +408,38 @@ function handleHint() {
 }
 
 function handleShare() {
-
   const aside_view = document.querySelector('aside');
-  const zigga = document.querySelector('textarea[name="game-result"]');
+  const zigga = document.querySelector('#share-result');
 
   const shareData = {
     title: 'ZIGGAWORDS',
-    text: zigga.value,
-    url: 'https://ziggawords.com',
+    text: zigga.textContent,
+    url: location.href,
   };
-
 
   try {
     navigator
       .share(shareData)
       .then((res) => {
-        console.log('success', res);
-        aside_view.textContent = 'SHARED!';
+        console.log('succesfully shared', res);
       })
       .catch((err) => {
-        console.log('share failed', err);
-        aside_view.textContent = 'SHARE FAILED!' + err;
+        console.error('error sharing', err);
       });
   } catch (e) {
     console.error(e);
-    aside_view.textContent = 'Error' + e;
-    const zigga = document.querySelector('textarea[name="game-result"]');
-    zigga.focus();
-    zigga.select();
-    document.execCommand('copy');
-    console.log('copy to clipboard');
+    try {
+      navigator.clipboard
+        .writeText(zigga.textContent)
+        .then((res) => {
+          console.log('success', res);
+        })
+        .catch((err) => {
+          console.log('share failed', err);
+        });
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
   }
 }
 

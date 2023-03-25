@@ -1,163 +1,244 @@
 <div class="container">
-<header>
-  <nav>
-    <ol>
-      <li id="game-no">GAME 1</li>
-      <li>ZIGGAWORDS</li>
-      <li><button class="secondary" name="stats">
-          STATS
-        </button></li>
-    </ol>
-  </nav>
-</header>
-<article>
-  <div class="svg-container">
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(50, 5)">
-      <text id="plum" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="-100" y="0"><tspan>NICE</tspan>
-      <animate
-        id="plum-animate"
-        attributeName="x"
-        from="-100"
-        to="100"
-        begin="indefinite"
-        fill="freeze"
-        dur="3s"
-        values="-100;0;0;0;100"
-        keySplines="
-            0.1 0.8 0.2 1;
-            0.1 0.8 0.2 1;
-            0.4 0.8 0.2 1;
-            0.9 0.3 0.8 1"
-        calcMode="spline"
-      />
-      <animateTransform
-        id="plum-animate-skew"
-        attributeName="transform"
-        type="skewX"
-        from="-30"
-        begin="indefinite"
-        fill="freeze"
-        to="30"
-        dur="3s"
-        values="-30;0;0;0;30"
-        keySplines="
-            0.1 0.8 0.2 1;
-            0.1 0.8 0.2 1;
-            0.4 0.8 0.2 1;
-            0.9 0.3 0.8 1"
-        calcMode="spline" />
-      <animate
-        id="plum-animate-fade"
-        attributeName="opacity"
-        from="0"
-        to="0"
-        begin="indefinite"
-        fill="freeze"
-        dur="3s"
-        values="0;1;1;1;0"
-        keySplines="
-            0.1 0.8 0.2 1;
-            0.1 0.8 0.2 1;
-            0.4 0.8 0.2 1;
-            0.9 0.3 0.8 1"
-        calcMode="spline"
-      />
-      </text>
-    </g>
-      <g transform="translate(50, 15)">
-        <text id="text-input" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1">INPUT</text>
-      </g>
-      </g>
-      <g transform="translate(50, 60)">
-        <g class="active" ontouchstart id="b-5" transform="translate(0, 0)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-          <polygon points="-8,8 8,8 8,-8 -8,-8" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1">A</text>
-        </g>
-        <g ontouchstart id="b-4" transform="translate(-20, 0)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-          <polygon points="-8,8 8,8 8,-8 -4,-8 -8,-4" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1"></text>
-        </g>
-        <g ontouchstart id="b-6" transform="translate(20, 0)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>          <polygon points="-8,8 8,8 8,-4 4,-8 -8,-8" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1"></text>
-        </g>
-        <g ontouchstart id="b-0" transform="translate(-30, 20)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>          <polygon points="-8,8 8,8 8,-8 -4,-8 -8,-4" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1"></text>
-        </g>
-        <g ontouchstart id="b-1" transform="translate(-10, 20)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>          <polygon points="-8,8 8,8 8,-8 -8,-8" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1"></text>
-        </g>
-        <g ontouchstart id="b-2" transform="translate(10, 20)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>          <polygon points="-8,8 8,8 8,-8 -8,-8" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1"></text>
-        </g>
-        <g ontouchstart id="b-3" transform="translate(30, 20)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>          <polygon points="-8,8 8,8 8,-4 4,-8 -8,-8" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1"></text>
-        </g>
-        <g ontouchstart id="b-7" transform="translate(0, -20)">
-          <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-          <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>          <polygon points="-8,8 8,8 8,-4 4,-8 -4,-8 -8,-4" />
-          <text alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1"></text>
-        </g>
-      </g>
-
-    </svg>
-  </div>
-</article>
-<footer>
-  <nav>
-    <ol>
-      <li><button class="tertiary" name="hint">HINT </button></li>
-      <li>
-      <button class="tertiary" name="delete">DELETE &#10005;</button>
-        <button name="enter">ENTER &#9166;</button>
-      </li>
-      <li><button class="tertiary" name="shuffle">SHUFFLE &#8634;</button</li>
-    </ol>
-  </nav>
-</footer>
-<div class="overlay"></div>
-<div class="drawer">
-  <div class="stats">
   <header>
-    <h3>
-    Statistics
-    </h3>
-    <button name="close-drawer" class="modal">
-    X
-    </button>
+    <nav>
+      <ol>
+        <li id="game-no">GAME 1</li>
+        <li>ZIGGAWORDS</li>
+        <li><button class="secondary" name="stats">STATS</button></li>
+      </ol>
+    </nav>
   </header>
-  <hr />
   <article>
-    <dl>
-      <dt>Today's result</dt>
-      <dd id="today-score">3/8</dd>
-      <dd id="today-hints">2/3 Hints</dd>
-      <dt>Streak</dt>
-      <dd id="current-streak">Current 3</dd>
-      <dd id="all-time-streak">All-time 10</dd>
-      <dt>Total played</dt>
-      <dd id="total-played">99</dd>
-    </dl>
-    <textarea readonly name="game-result">GAME 1</textarea>
-    <div>
-    <button class="secondary" name="share">Share</button>
-    <aside></aside>
+    <div class="svg-container">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50, 5)">
+          <text
+            id="plum"
+            alignment-baseline="middle"
+            dominant-baseline="central"
+            text-anchor="middle"
+            x="-100"
+            y="0"
+          >
+            <tspan>NICE</tspan>
+            <animate
+              id="plum-animate"
+              attributeName="x"
+              from="-100"
+              to="100"
+              begin="indefinite"
+              fill="freeze"
+              dur="3s"
+              values="-100;0;0;0;100"
+              keySplines="
+            0.1 0.8 0.2 1;
+            0.1 0.8 0.2 1;
+            0.4 0.8 0.2 1;
+            0.9 0.3 0.8 1"
+              calcMode="spline"
+            />
+            <animateTransform
+              id="plum-animate-skew"
+              attributeName="transform"
+              type="skewX"
+              from="-30"
+              begin="indefinite"
+              fill="freeze"
+              to="30"
+              dur="3s"
+              values="-30;0;0;0;30"
+              keySplines="
+            0.1 0.8 0.2 1;
+            0.1 0.8 0.2 1;
+            0.4 0.8 0.2 1;
+            0.9 0.3 0.8 1"
+              calcMode="spline"
+            />
+            <animate
+              id="plum-animate-fade"
+              attributeName="opacity"
+              from="0"
+              to="0"
+              begin="indefinite"
+              fill="freeze"
+              dur="3s"
+              values="0;1;1;1;0"
+              keySplines="
+            0.1 0.8 0.2 1;
+            0.1 0.8 0.2 1;
+            0.4 0.8 0.2 1;
+            0.9 0.3 0.8 1"
+              calcMode="spline"
+            />
+          </text>
+        </g>
+        <g transform="translate(50, 15)">
+          <text
+            id="text-input"
+            alignment-baseline="middle"
+            dominant-baseline="central"
+            text-anchor="middle"
+            x="0"
+            y="1"
+          >
+            INPUT
+          </text>
+        </g>
+        <g transform="translate(50, 60)">
+          <g class="active" ontouchstart id="b-5" transform="translate(0, 0)">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 0 0"
+              to="360 0 0"
+              dur="5s"
+              begin="indefinite"
+              values="0 0 0;0 0 0;360 0 0;360 0 0;360 0 0"
+              keySplines="
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1"
+              calcMode="spline"
+            />
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-8 -8,-8" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            >
+              A
+            </text>
+          </g>
+          <g ontouchstart id="b-4" transform="translate(-20, 0)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-8 -4,-8 -8,-4" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-6" transform="translate(20, 0)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-4 4,-8 -8,-8" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-0" transform="translate(-30, 20)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-8 -4,-8 -8,-4" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-1" transform="translate(-10, 20)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-8 -8,-8" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-2" transform="translate(10, 20)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-8 -8,-8" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-3" transform="translate(30, 20)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-4 4,-8 -8,-8" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-7" transform="translate(0, -20)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
+            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
+            <polygon points="-8,8 8,8 8,-4 4,-8 -4,-8 -8,-4" />
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+        </g>
+      </svg>
     </div>
   </article>
+  <footer>
+    <nav>
+      <ol>
+        <li><button class="tertiary" name="hint">HINT</button></li>
+        <li>
+          <button class="tertiary" name="delete">DELETE &#10005;</button>
+          <button name="enter">ENTER &#9166;</button>
+        </li>
+        <li>
+          <button class="tertiary" name="shuffle">SHUFFLE &#8634;</button>
+        </li>
+      </ol>
+    </nav>
+  </footer>
+  <div class="overlay"></div>
+  <div class="drawer">
+    <div class="stats">
+      <header>
+        <h3>Statistics</h3>
+        <button name="close-drawer" class="modal">X</button>
+      </header>
+      <hr />
+      <article>
+        <dl>
+          <dt>Today</dt>
+          <dd id="today-score">3/8</dd>
+          <dd id="today-hints">2/3 Hints</dd>
+          <dt>Streak</dt>
+          <dd id="current-streak">Current 3</dd>
+          <dd id="all-time-streak">All-time 10</dd>
+          <dt>Total</dt>
+          <dd id="total-played">Games played 99</dd>
+        </dl>
+        <pre id="share-result"></pre>
+        <button class="secondary" name="share">Share</button>
+        <aside></aside>
+      </article>
+    </div>
   </div>
-</div>
 </div>
