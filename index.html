@@ -14,7 +14,7 @@
   <div class="svg-container">
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
     <g transform="translate(50, 5)">
-      <text id="plum" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="0">NICE
+      <text id="plum" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="-100" y="0">NICE
       <animate
         id="plum-animate"
         attributeName="x"
@@ -32,22 +32,24 @@
         calcMode="spline"
         repeatCount="indefinite"
       />
-      <animate
+      <animateTransform
         id="plum-animate-skew"
-        attributeName="skewX"
-        from="-10"
-        to="10"
-        begin="0s"
+        attributeName="transform"
+        type="skewX"
+        from="-30"
+        begin="indefinite"
+        fill="freeze"
+        to="30"
         dur="4s"
-        values="-10;0;0;0;10"
+        values="-30;0;0;0;30"
         keySplines="
             0.1 0.8 0.2 1;
             0.1 0.8 0.2 1;
             0.4 0.8 0.2 1;
             0.9 0.3 0.8 1"
         calcMode="spline"
-        repeatCount="indefinite"
-      />
+        repeatCount="indefinite" />
+      
       <animate
         id="plum-animate-fade"
         attributeName="opacity"

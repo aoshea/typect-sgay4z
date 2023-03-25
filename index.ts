@@ -289,7 +289,7 @@ function advanceLevel() {
     const plumtexts = ['Nice', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
     document.querySelector('animate#plum-animate').beginElement();
     document.querySelector('animate#plum-animate-fade').beginElement();
-    document.querySelector('animate#plum-animate-skew').beginElement(); //.show(plumtexts[game_level - 1]);
+    document.querySelector('animateTransform#plum-animate-skew').beginElement(); //.show(plumtexts[game_level - 1]);
   } else {
     // plum_view.show('You win');
 
