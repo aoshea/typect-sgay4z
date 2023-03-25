@@ -94,9 +94,7 @@ let today_hints = `${hints}/3`;
 let current_streak = `Current ${streak}`;
 let all_time_streak = `All-time ${best_streak}`;
 let total_played = '0';
-let game_result = `Game ${game_no} ${today_score}\n \uD83D\uDFE7`;
-
-document.getElementById('game-no').textContent = game_result;
+let game_result = `Zigga ${game_no} ${today_score}\n`;
 
 main();
 
@@ -120,14 +118,15 @@ function buildGameResult(game_no, input_len, max_chars) {
   let a = '\uD83D\uDFE7';
   let b = '\u2B1C';
   let c = '\u2B1B';
-  let result = `Game ${game_no} ${input_len}/${max_chars}\n`;
-  result += b + b + a + b + '\n';
-  result += b + a + a + a + '\n';
-  result += ' ' + a + c + a + a + '\n';
+  let result = `Zigga ${game_no} ${input_len}/${max_chars}\n`;
+  result += '    ' + a + '\n';
+  result += '  ' + a + a + a + '\n';
+  result += ' ' + a + b + a + a + '\n';
   return result;
 }
 
 function updateStats() {
+  document.querySelector('#game-no').textContent = `Game ${game_no}`;
   today_score = '3/8';
   document.querySelector('#today-score').textContent = today_score;
   today_hints = `${hints}/3`;
