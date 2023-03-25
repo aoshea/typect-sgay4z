@@ -393,13 +393,16 @@ function handleHint() {
 }
 
 function handleShare() {
+
+  const aside_view = document.querySelector('aside');
+  const zigga = document.querySelector('textarea[name="game-result"]');
+
   const shareData = {
     title: 'ZIGGAWORDS',
-    text: 'ZIGGAWORDS GAME 1 🤖👻🟧🟧▪️▫️◾️',
+    text: zigga.value,
     url: 'https://ziggawords.com',
   };
 
-  const aside_view = document.querySelector('aside');
 
   try {
     navigator
