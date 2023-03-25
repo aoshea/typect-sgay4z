@@ -324,7 +324,8 @@ function advanceLevel() {
 
     const plumtexts = ['Sweet', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
 
-    document.querySelector('text#plum').textContent = plumtexts[game_level - 1];
+    document.querySelector('text#plum tspan').textContent =
+      plumtexts[game_level - 1];
     document.querySelector('animate#plum-animate').beginElement();
     document.querySelector('animate#plum-animate-fade').beginElement();
     document.querySelector('animateTransform#plum-animate-skew').beginElement(); //.show(plumtexts[game_level - 1]);
