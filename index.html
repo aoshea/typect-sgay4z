@@ -14,7 +14,24 @@
   <div class="svg-container">
     <svg viewBox="0 0 100 100">
     <g transform="translate(50, 5)">
-      <text id="plum" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="0">NICE</text>
+      <text id="plum" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="0">NICE
+      <animate
+        id="plum-animate"
+        attributeName="x"
+        from="-100"
+        to="100"
+        begin="0s"
+        dur="4s"
+        values="-100;0;0;0;100"
+        keySplines="
+            0.1 0.8 0.2 1;
+            0.1 0.8 0.2 1;
+            0.4 0.8 0.2 1;
+            0.9 0.3 0.8 1"
+        calcMode="spline"
+        repeatCount="indefinite"
+      />
+      </text>
     </g>
       <g transform="translate(50, 15)">
         <text id="text-input" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="1">INPUT</text>

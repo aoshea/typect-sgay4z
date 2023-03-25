@@ -294,28 +294,19 @@ function handleShuffle() {
   }
 }
 
-function advanceLevel(is_hint = false) {
+function advanceLevel() {
   if (game_level < max_chars - 3) {
     ++game_level;
     const tile = tiles[game_level + 2];
     tile.show(getChar);
 
-    if (!is_hint) {
-      const plumtexts = [
-        'Nice',
-        'Excellent',
-        'Amazing',
-        'Incredible',
-        'Superb',
-      ];
-      plum_view.textContent = plumtexts[game_level - 1];
-      plum_view.classList.add('show');
-    } else {
-      tile.hint();
-    }
+    const plumtexts = ['Nice', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
+    plum_view.textContent = plumtexts[game_level - 1];
+    plum_view.beginElement();
   } else {
     plum_view.textContent = 'You win';
-    plum_view.classList.add('show');
+    plum_view.beginElement();
+
     setTimeout(toggleStats, 1000);
   }
 }
@@ -334,32 +325,33 @@ function handleHint() {
   if (hints > 0) {
     if (game_level < 5) {
       // what is the next letter? check input_indices
-      
-      const game_level_answer = answers.get(game_level + 3)[0];
-        // check we are correct
-        for(let i = 0; i < input_indices.length; ++i) {
-          console.log(getChar(input_indices[i]), game_level_answer.charAt(i));
-          if (getChar(input_indices[i]) !== game_level_answer.charAt(i)) {
-            console.log('wrong input, clear it from here on');
 
-            let k = input_indices.length;
-            while(k > i) {
-              input_indices.pop();
-              --k;
-            }
-            break;
+      const game_level_answer = answers.get(game_level + 3)[0];
+      // check we are correct
+      for (let i = 0; i < input_indices.length; ++i) {
+        console.log(getChar(input_indices[i]), game_level_answer.charAt(i));
+        if (getChar(input_indices[i]) !== game_level_answer.charAt(i)) {
+          console.log('wrong input, clear it from here on');
+
+          let k = input_indices.length;
+          while (k > i) {
+            input_indices.pop();
+            --k;
           }
+          break;
         }
-        const next_char = game_level_answer.charAt(input_indices.length);
-        console.log('next_char', next_char, game_level_answer);
+      }
+      const next_char = game_level_answer.charAt(input_indices.length);
+      const next_char_index = getCharIndex(next_char);
+      const next_tile = tiles.find((el) => el.index === next_char_index);
+      if (next_tile) {
+        next_tile.hint();
         addInput(getCharIndex(next_char));
         --hints;
-    
-      
-      // then check answer..
-      // the flag hintted letter as hinted
-      // advanceLevel(true);
-      // clearInput();
+      } else {
+        throw new Error('No tile exists for ' + next_char_index + next_char);
+      }
+      console.log('next_char', next_char, game_level_answer);
     }
   }
 }
@@ -430,7 +422,7 @@ function draw() {
 
 function renderUI() {
   const hint_btn = document.querySelector('button[name="hint"]');
-  hint_btn.textContent = ` \uFE56 HINT - ${hints}`;
+  hint_btn.textContent = `HINT ${hints} \uFE56 `;
   if (hints === 0) {
     hint_btn.setAttribute('disabled', 'disabled');
   }
