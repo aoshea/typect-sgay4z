@@ -13,6 +13,7 @@
 <article>
   <div class="svg-container">
     <svg viewBox="0 0 100 100">
+  
     <g transform="translate(50, 5)">
       <text id="plum" alignment-baseline="middle" dominant-baseline="central" text-anchor="middle" x="0" y="0">NICE
       <animate
@@ -20,9 +21,27 @@
         attributeName="x"
         from="-100"
         to="100"
-        begin="0s"
+        begin="indefinite"
+        fill="freeze"
         dur="4s"
         values="-100;0;0;0;100"
+        keySplines="
+            0.1 0.8 0.2 1;
+            0.1 0.8 0.2 1;
+            0.4 0.8 0.2 1;
+            0.9 0.3 0.8 1"
+        calcMode="spline"
+        repeatCount="indefinite"
+      />
+      <animate
+        id="plum-animate-fade"
+        attributeName="opacity"
+        from="0"
+        to="0"
+        begin="indefinite"
+        fill="freeze"
+        dur="4s"
+        values="0;1;1;1;0"
         keySplines="
             0.1 0.8 0.2 1;
             0.1 0.8 0.2 1;
@@ -120,9 +139,9 @@
       <dt>Total played</dt>
       <dd>99</dd>
     </dl>
-    <textarea readonly name="game-result">GAME 1 🤖👻🟧🟧▪️▫️◾️</textarea>
+    <textarea readonly name="game-result">GAME 1</textarea>
     <div>
-    <button class="share" name="share">Share</button>
+    <button class="secondary" name="share">Share</button>
     <aside></aside>
     </div>
   </article>
