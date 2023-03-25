@@ -408,9 +408,7 @@ function handleHint() {
 }
 
 function handleShare() {
-  const aside_view = document.querySelector('aside');
   const zigga = document.querySelector('#share-result');
-
   const shareData = {
     title: 'ZIGGAWORDS',
     text: zigga.textContent,
@@ -510,11 +508,6 @@ function getCharIndex(char) {
 
 // Define classes
 /*
-
-
-// Tile element
-
-
 // point class
 function Point(x, y) {
   this.x = x;

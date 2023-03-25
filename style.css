@@ -45,6 +45,10 @@ button {
   text-transform: uppercase;
 }
 
+button:disabled {
+  opacity: 0.5;
+}
+
 button.secondary {
   background: orange;
   color: black;
