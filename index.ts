@@ -1,22 +1,6 @@
 // Import stylesheets
 import './style.css';
 
-function Plum() {
-  this.root_el = document.querySelector('text#plum');
-  this.animate_el = document.querySelector('#plum-animate');
-  this.animate_fade_el = document.querySelector('#plum-animate-fade');
-}
-
-Plum.prototype.show = function (text) {
-  this.root_el.textContent = text;
-  try {
-    this.animate_el.beginElement();
-    this.animate_fade_el.beginElement();
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 function Tile(index) {
   this.index = index;
   // index of char set is index in array
@@ -99,7 +83,6 @@ let max_chars = 0;
 let t = 0;
 let game_level = 0;
 let hints = 3;
-let plum_view = null;
 
 main();
 
@@ -112,7 +95,6 @@ function main() {
   tiles = initTiles(max_chars);
   tile_view_map = initTileViews(max_chars, inputHandler);
   input_view = document.querySelector('#text-input');
-  plum_view = new Plum();
 
   // start tick
   gameloop();
@@ -305,9 +287,11 @@ function advanceLevel() {
     tile.show(getChar);
 
     const plumtexts = ['Nice', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
-    plum_view.show(plumtexts[game_level - 1]);
+    document.querySelector('animate#plum-animate').beginElement();
+    document.querySelector('animate#plum-animate-fade').beginElement();
+    document.querySelector('animate#plum-animate-skew').beginElement(); //.show(plumtexts[game_level - 1]);
   } else {
-    plum_view.show('You win');
+    // plum_view.show('You win');
 
     setTimeout(toggleStats, 1000);
   }
