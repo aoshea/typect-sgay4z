@@ -57,7 +57,7 @@ button.tertiary {
 button.modal {
   background: white;
   color: black;
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
 }
 
 .drawer {
@@ -94,6 +94,10 @@ button.modal {
 .stats header {
   display: flex;
   justify-content: space-between;
+}
+
+.stats header h3 {
+  margin: 0.5rem 0;
 }
 
 .container {
