@@ -68,8 +68,10 @@ TileView.prototype.drawState = function (
 // Will be set by template
 window.ZZ_INFO =
   'aeg|aegr|aegrs|adegrs|abdegrs|abdegirs,age|gear|rage|gears|rages|sarge|grades|badgers|abridges|brigades';
+window.ZZ_GAME_NO = '1';
 
 const info = window.ZZ_INFO;
+const game_no = window.ZZ_GAME_NO;
 const friction = 0.99;
 const rest = 28;
 let touch = false;
@@ -84,6 +86,16 @@ let t = 0;
 let game_level = 0;
 let hints = 3;
 
+// statistics
+let streak = '0';
+let best_streak = '0';
+let today_score = '3/8';
+let today_hints = `${hints}/3`;
+let current_streak = `Current ${streak}`;
+let all_time_streak = `All-time ${best_streak}`;
+let total_played = '0';
+let game_result = `Game ${game_no} ${today_score}\n \u1F7E7\n\u1F7E7\u1F7E7`;
+
 main();
 
 function main() {
@@ -96,8 +108,28 @@ function main() {
   tile_view_map = initTileViews(max_chars, inputHandler);
   input_view = document.querySelector('#text-input');
 
+  updateStats();
+
   // start tick
   gameloop();
+}
+
+function updateStats() {
+  today_score = '3/8';
+  document.querySelector('#today-score').textContent = today_score;
+  today_hints = `${hints}/3`;
+  document.querySelector('#today-hints').textContent = today_hints;
+
+  streak = window.localStorage.getItem('z-streak');
+  best_streak = window.localStorage.getItem('z-best-streak');
+  current_streak = `Current ${streak}`;
+  document.querySelector('#current-streak').textContent = current_streak;
+  all_time_streak = `All-time ${best_streak}`;
+  document.querySelector('#all-time-streak').textContent = all_time_streak;
+  total_played = window.localStorage.getItem('z-total-played');
+  document.querySelector('#total-played').textContent = total_played;
+  game_result = `Game ${game_no} ${today_score}\n`;
+  document.querySelector('textarea[name="game-result"]').textContent = game_result;
 }
 
 function addListeners() {
@@ -337,7 +369,6 @@ function handleHint() {
       } else {
         throw new Error('No tile exists for ' + next_char_index + next_char);
       }
-      console.log('next_char', next_char, game_level_answer);
     }
   }
 }
