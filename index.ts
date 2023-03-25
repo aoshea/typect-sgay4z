@@ -168,6 +168,7 @@ function toggleStats() {
 }
 
 function handleClickStats() {
+  updateStats();
   toggleStats();
 }
 
@@ -313,18 +314,22 @@ function handleShuffle() {
 }
 
 function advanceLevel() {
+  updateStats();
+
   if (game_level < max_chars - 3) {
     ++game_level;
     const tile = tiles[game_level + 2];
     tile.show(getChar);
 
-    const plumtexts = ['Nice', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
+    const plumtexts = ['Sweet', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
+
+    document.querySelector('text#plum').textContent = plum_texts[game_level - 1];
     document.querySelector('animate#plum-animate').beginElement();
     document.querySelector('animate#plum-animate-fade').beginElement();
     document.querySelector('animateTransform#plum-animate-skew').beginElement(); //.show(plumtexts[game_level - 1]);
-  } else {
-    // plum_view.show('You win');
 
+  } else {
+    document.querySelector('text#plum').textContent = 'You win';
     setTimeout(toggleStats, 1000);
   }
 }
