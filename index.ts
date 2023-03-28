@@ -1,13 +1,87 @@
 // Import stylesheets
 import './style.css';
 
+const tile_machine_def = {
+  initial: 'empty',
+  states: {
+    empty: {
+      on: {
+        // Event type:
+        CHAR_RECEIVED: {
+          target: 'idle',
+        },
+      },
+    },
+    idle: {
+      on: {
+        // Event type:
+        CHAR_ACTIVATE: {
+          target: 'active',
+        },
+      },
+    },
+    active: {
+      on: {
+        CHAR_SUCCESS: {
+          target: 'success',
+        },
+        CHAR_FAILURE: {
+          target: 'idle',
+        },
+      },
+    },
+    success: {},
+  },
+};
+
+function createMachine(def) {
+  return {
+    value: def.initial,
+    transition(state, event) {
+      const currentStateDef = def.states[state];
+
+      return state;
+    },
+  };
+}
+
 function Tile(index) {
+  this.machine = {
+    initial: 'empty',
+    transitions: {
+      empty: {
+        CHAR_RECEIVED: 'idle',
+      },
+      idle: {
+        CHAR_ACTIVATE: 'active',
+      },
+      active: {
+        CHAR_SUCCESS: 'success',
+      },
+    },
+  };
   this.index = index;
   // index of char set is index in array
   // user input pressed?
   this.is_pressed = false;
   this.is_hinted = false;
+
+  // state machine
+  this.state = {
+    status: this.machine.initial,
+  };
+
+  console.log('this.state_machine value', this.state_machine.value);
 }
+
+Tile.prototype.transition = function (state, event) {
+  const next_state_target =
+    this.machine.transitions[state.status][event] ?? state.status;
+  return {
+    ...state,
+    status: next_state_target,
+  };
+};
 
 Tile.prototype.hint = function () {
   this.is_hinted = true;
@@ -15,6 +89,10 @@ Tile.prototype.hint = function () {
 
 Tile.prototype.show = function (getChar) {
   this.char = getChar(this.index);
+  this.state_value = this.state_machine.transition(
+    this.state_value,
+    'CHAR_RECEIVED'
+  );
 };
 
 Tile.prototype.getKey = function (index) {
@@ -22,6 +100,7 @@ Tile.prototype.getKey = function (index) {
 };
 
 Tile.prototype.update = function () {
+  console.log(this.index, this.state.status);
   return false;
 };
 
