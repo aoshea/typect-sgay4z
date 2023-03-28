@@ -89,10 +89,7 @@ Tile.prototype.hint = function () {
 
 Tile.prototype.show = function (getChar) {
   this.char = getChar(this.index);
-  this.state_value = this.state_machine.transition(
-    this.state_value,
-    'CHAR_RECEIVED'
-  );
+  this.state = this.transition(this.state, 'CHAR_RECEIVED');
 };
 
 Tile.prototype.getKey = function (index) {
