@@ -11,6 +11,28 @@
   <article>
     <div class="svg-container">
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <mask id="mask-a">
+            <rect x="0" y="0" width="3" height="3" fill="black"><
+              <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0 0 0"
+              to="360 0 0"
+              dur="2s"
+              begin="0s"
+              repeatCount="10"
+              values="0 0 0;0 0 0;360 0 0;360 0 0;360 0 0"
+              keySplines="
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1"
+              calcMode="spline"
+            />
+            </rect>
+          </mask>
+        </defs>
         <g transform="translate(50, 5)">
           <text
             id="plum"
@@ -143,6 +165,7 @@
             <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
             <polygon points="-8,8 8,8 8,-8 -4,-8 -8,-4" />
             <text
+              mask="url(#mask-a)" 
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"

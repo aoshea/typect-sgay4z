@@ -1,50 +1,6 @@
 // Import stylesheets
 import './style.css';
 
-const tile_machine_def = {
-  initial: 'empty',
-  states: {
-    empty: {
-      on: {
-        // Event type:
-        CHAR_RECEIVED: {
-          target: 'idle',
-        },
-      },
-    },
-    idle: {
-      on: {
-        // Event type:
-        CHAR_ACTIVATE: {
-          target: 'active',
-        },
-      },
-    },
-    active: {
-      on: {
-        CHAR_SUCCESS: {
-          target: 'success',
-        },
-        CHAR_FAILURE: {
-          target: 'idle',
-        },
-      },
-    },
-    success: {},
-  },
-};
-
-function createMachine(def) {
-  return {
-    value: def.initial,
-    transition(state, event) {
-      const currentStateDef = def.states[state];
-
-      return state;
-    },
-  };
-}
-
 function Tile(index) {
   this.machine = {
     initial: 'empty',
@@ -70,8 +26,6 @@ function Tile(index) {
   this.state = {
     status: this.machine.initial,
   };
-
-  console.log('this.state_machine value', this.state_machine.value);
 }
 
 Tile.prototype.transition = function (state, event) {
