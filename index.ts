@@ -51,7 +51,6 @@ Tile.prototype.getKey = function (index) {
 };
 
 Tile.prototype.update = function () {
-  console.log(this.index, this.state.status);
   return false;
 };
 
