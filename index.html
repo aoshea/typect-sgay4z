@@ -13,24 +13,24 @@
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <mask id="mask-a">
-            <rect x="0" y="0" width="3" height="3" fill="black"><
+            <polygon fill="white" points="-12,-8 8,-8 12,8 -8,8">
               <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="0 0 0"
-              to="360 0 0"
-              dur="2s"
-              begin="0s"
-              repeatCount="10"
-              values="0 0 0;0 0 0;360 0 0;360 0 0;360 0 0"
-              keySplines="
+                attributeName="transform"
+                type="translate"
+                from="0 0"
+                to="16 0"
+                dur="3s"
+                begin="0s"
+                repeatCount="10"
+                values="0 0; 0 0; 20 0; 20 0; 20 0"
+                keySplines="
                 0.1 0.8 0.2 1;
                 0.1 0.8 0.2 1;
                 0.1 0.8 0.2 1;
                 0.1 0.8 0.2 1"
-              calcMode="spline"
-            />
-            </rect>
+                calcMode="spline"
+              />
+            </polygon>
           </mask>
         </defs>
         <g transform="translate(50, 5)">
@@ -161,11 +161,40 @@
             ></text>
           </g>
           <g ontouchstart id="b-0" transform="translate(-30, 20)">
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-8 -4,-8 -8,-4" />
+            <rect
+              mask="url(#mask-a)"
+              class="layer----base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
+            <polygon
+              fill="blue"
+              fill-opacity="0.2"
+              points="-12,-8 8,-8 12,8 -8,8"
+            />
             <text
-              mask="url(#mask-a)" 
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"
@@ -174,6 +203,7 @@
             ></text>
           </g>
           <g ontouchstart id="b-1" transform="translate(-10, 20)">
+            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
             <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
             <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
             <polygon points="-8,8 8,8 8,-8 -8,-8" />

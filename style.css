@@ -191,17 +191,18 @@ ol li:nth-child(3) {
   flex-basis: 100%;
 }
 
-polygon {
-  opacity: 0;
+rect.layer--base {
+  fill: gray;
+  stroke: blue;
 }
 
-rect {
-  fill: white;
-  stroke: black;
+rect.layer--edge {
+  fill: transparent;
+  stroke: blue;
   stroke-linecap: round;
 }
 
-rect + rect {
+rect.layer--overlay {
   stroke-width: 1.5;
   stroke: orange;
   stroke-linecap: butt;
@@ -209,15 +210,31 @@ rect + rect {
   opacity: 0;
 }
 
-.state--active > rect {
-  fill: orange;
+/*
+rect + rect {
+  fill: transparent;
+  stroke: blue;
+  stroke-linecap: round;
 }
 
-.state--in-use > rect {
+rect + rect + rect {
+  stroke-width: 1.5;
+  stroke: orange;
+  stroke-linecap: butt;
+  fill: transparent;
+  opacity: 0;
+}
+*/
+
+.state--active > rect.layer--base {
+  fill: black;
+}
+
+.state--in-use > rect.layer--base {
   fill: gray;
 }
 
-.state--hinted > rect {
+.state--hinted > rect.layer--base {
   fill: transparent;
 }
 
