@@ -45,7 +45,7 @@ Tile.prototype.update = function () {
   return false;
 };
 
-function TileView(position, handler, text_mask_animate_el) {
+function TileView(position, handler) {
   this.timeout = null;
   this.position = position;
   this.handler = handler;
@@ -53,7 +53,6 @@ function TileView(position, handler, text_mask_animate_el) {
   this.base_el = this.root_el.querySelector('polygon.layer--base');
   this.base_animate_el = this.base_el.querySelector('animate');
   this.text_el = this.root_el.querySelector('text');
-  this.text_mask_animate_el = text_mask_animate_el;
   this.addListeners(handler);
 }
 
@@ -71,8 +70,7 @@ TileView.prototype.addListeners = function (handler) {
 TileView.prototype.draw = function (tile) {
   if (tile.state !== tile.prev_state) {
     if (tile.state & T_IDLE) {
-      this.text_el.setAttribute('mask', 'url(#mask-b)');
-      this.text_mask_animate_el.beginElement();
+      // this.text_el.setAttribute('mask', 'url(#mask-b)');
     }
     if (tile.state & T_COMPLETE) {
       if (this.timeout) {
@@ -146,8 +144,6 @@ let current_streak = `Current ${streak}`;
 let all_time_streak = `All-time ${best_streak}`;
 let total_played = '0';
 let game_result = `Zigga ${game_no} ${today_score}\n`;
-const text_mask_el = document.querySelector('#mask-b');
-const text_mask_animate_el = text_mask_el.querySelector('#mask-b-animate');
 
 main();
 
@@ -160,8 +156,6 @@ function main() {
   tiles = initTiles(max_chars);
   tile_view_map = initTileViews(max_chars, inputHandler);
   input_view = document.querySelector('#text-input');
-
-  console.log(text_mask_el, text_mask_animate_el);
 
   updateStats();
 
@@ -302,7 +296,7 @@ function initAnswers(info) {
 function initTileViews(max_chars, handler) {
   const tile_view_map = {};
   for (let i = 0; i < max_chars; ++i) {
-    const view = new TileView(i, handler, text_mask_animate_el);
+    const view = new TileView(i, handler);
     tile_view_map[view.getKey()] = view;
   }
   return tile_view_map;
