@@ -5,6 +5,7 @@ const T_EMPTY = 1 << 0;
 const T_IDLE = 1 << 1;
 const T_USE = 1 << 2;
 const T_COMPLETE = 1 << 3;
+const T_END = 1 << 5;
 const T_HINT = 1 << 4;
 
 function Tile(index) {
@@ -15,11 +16,14 @@ function Tile(index) {
 Tile.prototype.updateState = function (newState) {
   this.prev_state = this.state;
   this.state = newState;
-  console.log(this.index, 'this.state', this.state);
 };
 
 Tile.prototype.hint = function () {
   this.updateState(this.state | T_HINT);
+};
+
+Tile.prototype.end = function () {
+  this.updateState(this.state | T_END);
 };
 
 Tile.prototype.show = function (char) {
@@ -72,7 +76,7 @@ TileView.prototype.draw = function (tile) {
     if (tile.state & T_IDLE) {
       // this.text_el.setAttribute('mask', 'url(#mask-b)');
     }
-    if (tile.state & T_COMPLETE) {
+    if (tile.state & (T_COMPLETE | T_END)) {
       if (this.timeout) {
         clearTimeout(this.timeout);
         this.timeout = null;
@@ -144,6 +148,22 @@ let current_streak = `Current ${streak}`;
 let all_time_streak = `All-time ${best_streak}`;
 let total_played = '0';
 let game_result = `Zigga ${game_no} ${today_score}\n`;
+
+// plums
+const plumtexts = [
+  'Nice',
+  'Great',
+  'Amazing',
+  'Incredible',
+  'Superb',
+  'You win',
+];
+const plumTspan = document.querySelector('text#plum tspan');
+const plumAnimate = document.querySelector('animate#plum-animate');
+const plumAnimateFade = document.querySelector('animate#plum-animate-fade');
+const plumAnimateSkew = document.querySelector(
+  'animateTransform#plum-animate-skew'
+);
 
 main();
 
@@ -394,32 +414,40 @@ function handleShuffle() {
   }
 }
 
+function showPlum(index) {
+  console.log('showPlum', index);
+  plumTspan.textContent = plumtexts[index];
+  plumAnimate.beginElement();
+  plumAnimateFade.beginElement();
+  plumAnimateSkew.beginElement();
+}
+
 function advanceLevel() {
   updateStats();
+  showPlum(game_level);
+
+
 
   if (game_level < max_chars - 3) {
-    ++game_level;
-    const tile = tiles[game_level + 2];
     for (let i = 0; i < tiles.length; ++i) {
       if (tiles[i].state & (T_IDLE | T_USE)) {
         tiles[i].complete();
       }
     }
+    ++game_level;
+    const tile = tiles[game_level + 2];
     const tile_char = getChar(tile.index);
     if (tile_char) {
       tile.show(tile_char);
     }
-
-    const plumtexts = ['Sweet', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
-
-    document.querySelector('text#plum tspan').textContent =
-      plumtexts[game_level - 1];
-    document.querySelector('animate#plum-animate').beginElement();
-    document.querySelector('animate#plum-animate-fade').beginElement();
-    document.querySelector('animateTransform#plum-animate-skew').beginElement(); //.show(plumtexts[game_level - 1]);
   } else {
-    document.querySelector('text#plum').textContent = 'You win';
-    setTimeout(toggleStats, 1000);
+
+    for (let i = 0; i < tiles.length; ++i) {
+      if (tiles[i].state & (T_IDLE | T_USE | T_COMPLETE)) {
+        tiles[i].end();
+      }
+    }
+    setTimeout(toggleStats, 2000);
   }
 }
 
@@ -566,221 +594,3 @@ function getChar(i) {
 function getCharIndex(char) {
   return wordsets[game_level].indexOf(char);
 }
-
-// Define classes
-/*
-// point class
-function Point(x, y) {
-  this.x = x;
-  this.y = y;
-  this.ax = 0;
-  this.ay = 0;
-}
-
-Point.prototype.update = function () {
-  this.ax *= FRICTION;
-  this.ay *= FRICTION;
-  this.x = this.x + this.ax;
-  this.y = this.y + this.ay;
-};
-
-Point.prototype.clone = function () {
-  return new Point(this.x, this.y);
-};
-
-// constraint class
-function Constraint(rest, a, b) {
-  this.rest = rest;
-  this.a = a;
-  if (typeof b === 'undefined' || typeof b === null) {
-    this.b = a.clone();
-    this.pin = true;
-  } else {
-    this.b = b;
-  }
-}
-
-Constraint.prototype.update = function () {
-  let dx = this.a.x - this.b.x;
-  let dy = this.a.y - this.b.y;
-  let len = Math.sqrt(dx * dx + dy * dy);
-  if (len === 0) {
-    len += 0.001;
-  }
-  let dist = 1 * (this.rest - len) * 0.5 * -1;
-  let ddx = this.b.x + dx * 0.5;
-  let ddy = this.b.y + dy * 0.5;
-  dx /= len;
-  dy /= len;
-  if (!this.pin) {
-    this.b.x = ddx + dx * 0.5 * this.rest * -1;
-    this.b.y = ddy + dy * 0.5 * this.rest * -1;
-    this.b.ax = this.b.ax + dx * dist;
-    this.b.ay = this.b.ay + dy * dist;
-  }
-  this.a.x = ddx + dx * 0.5 * this.rest;
-  this.a.y = ddy + dy * 0.5 * this.rest;
-  this.a.ax = this.a.ax + dx * -dist;
-  this.a.ay = this.a.ay + dy * -dist;
-};
-
-// blob class
-function Blob(p, char) {
-  this.p = p;
-  this.char = char;
-}
-
-Blob.prototype.update = function () {
-  this.p.update();
-};
-*/
-
-/*
-// constraints
-const constraints = [];
-
-// tiles
-let tiles = [];
-// tile view representation indexed by id
-const tile_view_map = {};
-
-// game internal count
-let t = 0;
-// game input text indices
-let input_indices = [];
-// input state set initially
-let touch = false;
-// game level
-let game_level = 0;
-// hints
-let hints = 3;
-
-function logger(...args) {
-  if (t % 3 === 0) {
-    console.log(...args);
-  }
-}
-
-
-init();
-
-function getPointOnCircle(i) {
-  const cx = 50;
-  const cy = 50;
-  const angle = (Math.PI / 4) * i;
-
-  // 0,1,2,3 ===
-
-  const radius = 30;
-  const x = cx + Math.sin(angle) * radius;
-  const y = cy + Math.cos(angle) * radius;
-  return { x, y };
-}
-
-// init game
-function init() {
-  // set input el
-  renderInput();
-
-  // create letter blobs
-  for (let i = 0; i < 8; ++i) {
-    const tile = new Tile(i);
-    tile.show();
-    tiles.push(tile);
-
-    const tile_view = new TileView(i, handler);
-    tile_view_map[tile_view.getKey()] = tile_view;
-  }
-
-  // add listeners to buttons
-  const delete_btn = document.querySelector('button[name="delete"]');
-  const enter_btn = document.querySelector('button[name="enter"]');
-  const shuffle_btn = document.querySelector('button[name="shuffle"]');
-  const hint_btn = document.querySelector('button[name="hint"]');
-  enter_btn.addEventListener('click', handleEnter, false);
-  shuffle_btn.addEventListener('click', handleShuffle, false);
-  hint_btn.addEventListener('click', handleHint, false);
-
-  // init plum
-  plumEl.addEventListener('animationend', () => {
-    plumEl.classList.remove('show');
-  });
-
-  gameloop();
-}
-
-function advanceLevel(is_hint = false) {
-  // TODO: get the 5 from the wordset
-  if (game_level < 5) {
-    ++game_level;
-    const tile = tiles[game_level + 2];
-    tile.show();
-
-    if (!is_hint) {
-      const plumtexts = [
-        'Good!',
-        'Great!',
-        'Amazing!',
-        'Superb!',
-        'Incredible!',
-      ];
-      plumEl.textContent = plumtexts[game_level - 1];
-      plumEl.classList.add('show');
-    } else {
-      tile.hint();
-    }
-  } else {
-    plumEl.textContent = 'You win!';
-    plumEl.classList.add('show');
-  }
-}
-
-
-
-
-
-function getAvailableTileCount(list) {
-  let count = 0;
-  for (let i = 0; i < list.length; ++i) {
-    if (list[i].char !== '') {
-      ++count;
-    }
-  }
-  return count;
-}
-
-
-
-
-// handle click
-function handler(e) {
-  e.stopPropagation();
-  switch (e.type) {
-    case 'touchstart':
-      touch = true;
-      break;
-    case 'touchend':
-      if (touch) {
-        handleInput(e.currentTarget);
-      }
-      break;
-    case 'mouseup':
-      if (!touch) {
-        handleInput(e.currentTarget);
-      }
-      break;
-    default:
-      console.log('unhandled?', e.type);
-  }
-}
-
-
-// debug looging
-let log = '';
-function debug(message) {
-  log += message + '<br>';
-  debugEl.innerHTML = log;
-}
-
-
-*/
