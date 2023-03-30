@@ -40,6 +40,11 @@
               />
             </polygon>
           </mask>
+          <mask id="bibble">
+            <rect x="0" y="0" width="1" height="1">
+              <animate id="hello" attributeName="x" />
+            </rect>
+          </mask>
           <mask id="mask-b">
             <rect
               fill="white"
@@ -55,9 +60,10 @@
                 type="translate"
                 from="0 0"
                 to="16 0"
-                dur="3s"
+                dur="4s"
                 begin="0s"
-                repeatCount="10"
+                repeatCount="1"
+                fill="freeze"
                 values="0 0; 0 0; 20 0; 20 0; 20 0"
                 keySplines="
                 0.1 0.8 0.2 1;
@@ -144,15 +150,30 @@
         </g>
         <g transform="translate(50, 60)">
           <g class="active" ontouchstart id="b-5" transform="translate(0, 0)">
-            <rect
-              class="layer--base"
-              rx="1"
-              ry="1"
-              x="-8"
-              y="-8"
-              width="16"
-              height="16"
-            ></rect>
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
+              <animate
+                id="poly-5-animate"
+                attributeName="points"
+                from="0,-8 0,-8 0,8 0,8"
+                to="-8,-8 8,-8 8,8 -8,8"
+                begin="indefinite"
+                repeatCount="1"
+                fill="freeze"
+                dur="2s"
+                values="
+        -8,-8 -8,-8 -8,8 -8,8;
+        -8,-8 -4,-8 -8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;"
+                keySplines="
+  0.1 0.8 0.2 1;
+  0.1 0.8 0.2 1;
+  0.4 0.8 0.2 1;
+  0.9 0.3 0.8 1"
+                calcMode="spline"
+              />
+            </polygon>
             <rect
               class="layer--edge"
               rx="1"
@@ -181,15 +202,30 @@
             ></text>
           </g>
           <g ontouchstart id="b-4" transform="translate(-20, 0)">
-            <rect
-              class="layer--base"
-              rx="1"
-              ry="1"
-              x="-8"
-              y="-8"
-              width="16"
-              height="16"
-            ></rect>
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
+              <animate
+                id="poly-4-animate"
+                attributeName="points"
+                from="0,-8 0,-8 0,8 0,8"
+                to="-8,-8 8,-8 8,8 -8,8"
+                begin="indefinite"
+                repeatCount="1"
+                fill="freeze"
+                dur="2s"
+                values="
+        -8,-8 -8,-8 -8,8 -8,8;
+        -8,-8 -4,-8 -8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;"
+                keySplines="
+  0.1 0.8 0.2 1;
+  0.1 0.8 0.2 1;
+  0.4 0.8 0.2 1;
+  0.9 0.3 0.8 1"
+                calcMode="spline"
+              />
+            </polygon>
             <rect
               class="layer--edge"
               rx="1"
@@ -218,15 +254,30 @@
             ></text>
           </g>
           <g ontouchstart id="b-6" transform="translate(20, 0)">
-            <rect
-              class="layer--base"
-              rx="1"
-              ry="1"
-              x="-8"
-              y="-8"
-              width="16"
-              height="16"
-            ></rect>
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
+              <animate
+                id="poly-6-animate"
+                attributeName="points"
+                from="0,-8 0,-8 0,8 0,8"
+                to="-8,-8 8,-8 8,8 -8,8"
+                begin="indefinite"
+                repeatCount="1"
+                fill="freeze"
+                dur="2s"
+                values="
+        -8,-8 -8,-8 -8,8 -8,8;
+        -8,-8 -4,-8 -8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;"
+                keySplines="
+  0.1 0.8 0.2 1;
+  0.1 0.8 0.2 1;
+  0.4 0.8 0.2 1;
+  0.9 0.3 0.8 1"
+                calcMode="spline"
+              />
+            </polygon>
             <rect
               class="layer--edge"
               rx="1"
@@ -255,14 +306,14 @@
             ></text>
           </g>
           <g ontouchstart id="b-0" transform="translate(-30, 20)">
-            <polygon class="layer--base" points="-12,-8 8,-8 12,8 -8,8">
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
               <animate
                 id="poly-0-animate"
                 attributeName="points"
                 from="0,-8 0,-8 0,8 0,8"
                 to="-8,-8 8,-8 8,8 -8,8"
-                begin="0s"
-                repeatCount="100"
+                begin="indefinite"
+                repeatCount="1"
                 fill="freeze"
                 dur="2s"
                 values="
@@ -298,6 +349,7 @@
               height="17"
             ></rect>
             <text
+              mask="url(#mask-b)"
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"
@@ -307,14 +359,14 @@
             ></text>
           </g>
           <g ontouchstart id="b-1" transform="translate(-10, 20)">
-            <polygon class="layer--base" points="-12,-8 8,-8 12,8 -8,8">
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
               <animate
                 id="poly-1-animate"
                 attributeName="points"
                 from="0,-8 0,-8 0,8 0,8"
                 to="-8,-8 8,-8 8,8 -8,8"
-                begin="0.1s"
-                repeatCount="100"
+                begin="indefinite"
+                repeatCount="1"
                 fill="freeze"
                 dur="2s"
                 values="
@@ -359,14 +411,14 @@
             ></text>
           </g>
           <g ontouchstart id="b-2" transform="translate(10, 20)">
-            <polygon class="layer--base" points="-12,-8 8,-8 12,8 -8,8">
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
               <animate
                 id="poly-2-animate"
                 attributeName="points"
                 from="0,-8 0,-8 0,8 0,8"
                 to="-8,-8 8,-8 8,8 -8,8"
-                begin="0.2s"
-                repeatCount="100"
+                begin="indefinite"
+                repeatCount="1"
                 fill="freeze"
                 dur="2s"
                 values="
@@ -411,15 +463,30 @@
             ></text>
           </g>
           <g ontouchstart id="b-3" transform="translate(30, 20)">
-            <rect
-              class="layer--base"
-              rx="1"
-              ry="1"
-              x="-8"
-              y="-8"
-              width="16"
-              height="16"
-            ></rect>
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
+              <animate
+                id="poly-3-animate"
+                attributeName="points"
+                from="0,-8 0,-8 0,8 0,8"
+                to="-8,-8 8,-8 8,8 -8,8"
+                begin="indefinite"
+                repeatCount="1"
+                fill="freeze"
+                dur="2s"
+                values="
+        -8,-8 -8,-8 -8,8 -8,8;
+        -8,-8 -4,-8 -8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;"
+                keySplines="
+  0.1 0.8 0.2 1;
+  0.1 0.8 0.2 1;
+  0.4 0.8 0.2 1;
+  0.9 0.3 0.8 1"
+                calcMode="spline"
+              />
+            </polygon>
             <rect
               class="layer--edge"
               rx="1"
@@ -448,15 +515,30 @@
             ></text>
           </g>
           <g ontouchstart id="b-7" transform="translate(0, -20)">
-            <rect
-              class="layer--base"
-              rx="1"
-              ry="1"
-              x="-8"
-              y="-8"
-              width="16"
-              height="16"
-            ></rect>
+            <polygon class="layer--base" points="0,-8 0,-8 0,8 0,8">
+              <animate
+                id="poly-7-animate"
+                attributeName="points"
+                from="0,-8 0,-8 0,8 0,8"
+                to="-8,-8 8,-8 8,8 -8,8"
+                begin="indefinite"
+                repeatCount="1"
+                fill="freeze"
+                dur="2s"
+                values="
+        -8,-8 -8,-8 -8,8 -8,8;
+        -8,-8 -4,-8 -8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;"
+                keySplines="
+  0.1 0.8 0.2 1;
+  0.1 0.8 0.2 1;
+  0.4 0.8 0.2 1;
+  0.9 0.3 0.8 1"
+                calcMode="spline"
+              />
+            </polygon>
             <rect
               class="layer--edge"
               rx="1"

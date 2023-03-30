@@ -50,7 +50,8 @@ function TileView(position, handler) {
   this.position = position;
   this.handler = handler;
   this.root_el = document.querySelector(this.getKey());
-  this.base_el = this.root_el.querySelector('rect.layer--base');
+  this.base_el = this.root_el.querySelector('polygon.layer--base');
+  this.base_animate_el = this.base_el.querySelector('animate');
   this.text_el = this.root_el.querySelector('text');
   this.addListeners(handler);
 }
@@ -74,7 +75,10 @@ TileView.prototype.draw = function (tile) {
         clearTimeout(this.timeout);
         this.timeout = null;
       }
+      // this.base_el.firstChild.beginElement();
+
       this.timeout = setTimeout(() => {
+        this.base_animate_el.beginElement();
         // this.base_el.setAttribute('mask', 'url(#mask-a)');
       }, this.position * 100);
       // this.setState('state--idle', true);
