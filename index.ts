@@ -66,6 +66,7 @@ TileView.prototype.draw = function (tile) {
   if (tile.state !== tile.prev_state) {
     console.log('draw state', tile.state, tile.state & T_IDLE);
     if (tile.state & T_IDLE) {
+      console.log('WILL DRAW', tile.state, tile.state & T_IDLE);
       this.base_el.setAttribute('mask', 'url(#mask-a)');
     }
     tile.prev_state = tile.state;
