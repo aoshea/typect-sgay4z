@@ -45,7 +45,7 @@ Tile.prototype.update = function () {
   return false;
 };
 
-function TileView(position, handler) {
+function TileView(position, handler, text_mask_animate_el) {
   this.timeout = null;
   this.position = position;
   this.handler = handler;
@@ -53,6 +53,7 @@ function TileView(position, handler) {
   this.base_el = this.root_el.querySelector('polygon.layer--base');
   this.base_animate_el = this.base_el.querySelector('animate');
   this.text_el = this.root_el.querySelector('text');
+  this.text_mask_animate_el = text_mask_animate_el;
   this.addListeners(handler);
 }
 
@@ -70,15 +71,17 @@ TileView.prototype.addListeners = function (handler) {
 TileView.prototype.draw = function (tile) {
   if (tile.state !== tile.prev_state) {
     if (tile.state & T_IDLE) {
-      console.log('will draw');
+      this.text_el.setAttribute('mask', 'url(#mask-b)');
+      this.text_mask_animate_el.beginElement();
+    }
+    if (tile.state & T_COMPLETE) {
       if (this.timeout) {
         clearTimeout(this.timeout);
         this.timeout = null;
       }
-      // this.base_el.firstChild.beginElement();
-
+      this.base_animate_el.beginElement();
       this.timeout = setTimeout(() => {
-        this.base_animate_el.beginElement();
+        // this.base_animate_el.beginElement();
         // this.base_el.setAttribute('mask', 'url(#mask-a)');
       }, this.position * 100);
       // this.setState('state--idle', true);
@@ -143,6 +146,8 @@ let current_streak = `Current ${streak}`;
 let all_time_streak = `All-time ${best_streak}`;
 let total_played = '0';
 let game_result = `Zigga ${game_no} ${today_score}\n`;
+const text_mask_el = document.querySelector('#mask-b');
+const text_mask_animate_el = text_mask_el.querySelector('animateTransform');
 
 main();
 
@@ -155,6 +160,8 @@ function main() {
   tiles = initTiles(max_chars);
   tile_view_map = initTileViews(max_chars, inputHandler);
   input_view = document.querySelector('#text-input');
+
+  console.log(text_mask_el, text_mask_animate_el);
 
   updateStats();
 
@@ -295,7 +302,7 @@ function initAnswers(info) {
 function initTileViews(max_chars, handler) {
   const tile_view_map = {};
   for (let i = 0; i < max_chars; ++i) {
-    const view = new TileView(i, handler);
+    const view = new TileView(i, handler, text_mask_animate_el);
     tile_view_map[view.getKey()] = view;
   }
   return tile_view_map;
@@ -399,6 +406,12 @@ function advanceLevel() {
   if (game_level < max_chars - 3) {
     ++game_level;
     const tile = tiles[game_level + 2];
+    for (let i = 0; i < tiles.length; ++i) {
+      console.log(tiles[i]);
+      if (tiles[i].state & (T_IDLE | T_USE)) {
+        tiles[i].complete();
+      }
+    }
     const tile_char = getChar(tile.index);
     if (tile_char) {
       tile.show(tile_char);
