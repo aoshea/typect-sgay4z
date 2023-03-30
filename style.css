@@ -192,13 +192,13 @@ ol li:nth-child(3) {
 }
 
 rect.layer--base {
-  fill: gray;
-  stroke: blue;
+  fill: orange;
+  stroke: none;
 }
 
 rect.layer--edge {
   fill: transparent;
-  stroke: blue;
+  stroke: black;
   stroke-linecap: round;
 }
 
@@ -210,24 +210,8 @@ rect.layer--overlay {
   opacity: 0;
 }
 
-/*
-rect + rect {
-  fill: transparent;
-  stroke: blue;
-  stroke-linecap: round;
-}
-
-rect + rect + rect {
-  stroke-width: 1.5;
-  stroke: orange;
-  stroke-linecap: butt;
-  fill: transparent;
-  opacity: 0;
-}
-*/
-
 .state--active > rect.layer--base {
-  fill: black;
+  fill: orange;
 }
 
 .state--in-use > rect.layer--base {

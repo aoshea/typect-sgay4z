@@ -13,7 +13,43 @@
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <mask id="mask-a">
-            <polygon fill="white" points="-12,-8 8,-8 12,8 -8,8">
+            <rect
+              fill="white"
+              class="mask--text"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <polygon fill="black" points="-12,-8 8,-8 12,8 -8,8">
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                from="0 0"
+                to="16 0"
+                dur="3s"
+                begin="0s"
+                repeatCount="1"
+                values="0 0; 0 0; 20 0; 20 0; 20 0"
+                keySplines="
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1;
+                0.1 0.8 0.2 1"
+                calcMode="spline"
+              />
+            </polygon>
+          </mask>
+          <mask id="mask-b">
+            <rect
+              fill="white"
+              class="mask--text"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <polygon fill="black" points="-12,-8 8,-8 12,8 -8,8">
               <animateTransform
                 attributeName="transform"
                 type="translate"
@@ -108,62 +144,9 @@
         </g>
         <g transform="translate(50, 60)">
           <g class="active" ontouchstart id="b-5" transform="translate(0, 0)">
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              from="0 0 0"
-              to="360 0 0"
-              dur="5s"
-              begin="indefinite"
-              values="0 0 0;0 0 0;360 0 0;360 0 0;360 0 0"
-              keySplines="
-                0.1 0.8 0.2 1;
-                0.1 0.8 0.2 1;
-                0.1 0.8 0.2 1;
-                0.1 0.8 0.2 1"
-              calcMode="spline"
-            />
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-8 -8,-8" />
-            <text
-              alignment-baseline="middle"
-              dominant-baseline="central"
-              text-anchor="middle"
-              x="0"
-              y="1"
-            >
-              A
-            </text>
-          </g>
-          <g ontouchstart id="b-4" transform="translate(-20, 0)">
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-8 -4,-8 -8,-4" />
-            <text
-              alignment-baseline="middle"
-              dominant-baseline="central"
-              text-anchor="middle"
-              x="0"
-              y="1"
-            ></text>
-          </g>
-          <g ontouchstart id="b-6" transform="translate(20, 0)">
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-4 4,-8 -8,-8" />
-            <text
-              alignment-baseline="middle"
-              dominant-baseline="central"
-              text-anchor="middle"
-              x="0"
-              y="1"
-            ></text>
-          </g>
-          <g ontouchstart id="b-0" transform="translate(-30, 20)">
             <rect
               mask="url(#mask-a)"
-              class="layer----base"
+              class="layer--base"
               rx="1"
               ry="1"
               x="-8"
@@ -189,64 +172,272 @@
               width="17"
               height="17"
             ></rect>
-            <polygon
-              fill="blue"
-              fill-opacity="0.2"
-              points="-12,-8 8,-8 12,8 -8,8"
-            />
             <text
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"
+              fill="black"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-4" transform="translate(-20, 0)">
+            <rect
+              mask="url(#mask-a)"
+              class="layer--base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              fill="black"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-6" transform="translate(20, 0)">
+            <rect
+              class="layer--base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              fill="black"
+              x="0"
+              y="1"
+            ></text>
+          </g>
+          <g ontouchstart id="b-0" transform="translate(-30, 20)">
+            <rect
+              class="layer--base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
+            <text
+              alignment-baseline="middle"
+              dominant-baseline="central"
+              text-anchor="middle"
+              fill="black"
               x="0"
               y="1"
             ></text>
           </g>
           <g ontouchstart id="b-1" transform="translate(-10, 20)">
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-8 -8,-8" />
+            <rect
+              class="layer--base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
             <text
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"
+              fill="black"
               x="0"
               y="1"
             ></text>
           </g>
           <g ontouchstart id="b-2" transform="translate(10, 20)">
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-8 -8,-8" />
+            <rect
+              class="layer--base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
             <text
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"
+              fill="black"
               x="0"
               y="1"
             ></text>
           </g>
           <g ontouchstart id="b-3" transform="translate(30, 20)">
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-4 4,-8 -8,-8" />
+            <rect
+              class="layer--base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
             <text
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"
+              fill="black"
               x="0"
               y="1"
             ></text>
           </g>
           <g ontouchstart id="b-7" transform="translate(0, -20)">
-            <rect rx="1" ry="1" x="-8" y="-8" width="16" height="16"></rect>
-            <rect rx="1" ry="1" x="-8.5" y="-8.5" width="17" height="17"></rect>
-            <polygon points="-8,8 8,8 8,-4 4,-8 -4,-8 -8,-4" />
+            <rect
+              mask="url(#mask-a)"
+              class="layer--base"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--edge"
+              rx="1"
+              ry="1"
+              x="-8"
+              y="-8"
+              width="16"
+              height="16"
+            ></rect>
+            <rect
+              class="layer--overlay"
+              rx="1"
+              ry="1"
+              x="-8.5"
+              y="-8.5"
+              width="17"
+              height="17"
+            ></rect>
             <text
               alignment-baseline="middle"
               dominant-baseline="central"
               text-anchor="middle"
+              fill="black"
               x="0"
               y="1"
             ></text>

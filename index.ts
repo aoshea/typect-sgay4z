@@ -1,49 +1,33 @@
 // Import stylesheets
 import './style.css';
 
-function Tile(index) {
-  this.machine = {
-    initial: 'empty',
-    transitions: {
-      empty: {
-        CHAR_RECEIVED: 'idle',
-      },
-      idle: {
-        CHAR_ACTIVATE: 'active',
-      },
-      active: {
-        CHAR_SUCCESS: 'success',
-      },
-    },
-  };
-  this.index = index;
-  // index of char set is index in array
-  // user input pressed?
-  this.is_pressed = false;
-  this.is_hinted = false;
+const T_EMPTY = 1 << 0;
+const T_IDLE = 1 << 1;
+const T_USE = 1 << 2;
+const T_COMPLETE = 1 << 3;
+const T_HINT = 1 << 4;
 
-  // state machine
-  this.state = {
-    status: this.machine.initial,
-  };
+function Tile(index) {
+  this.state = T_EMPTY;
+  this.index = index;
 }
 
-Tile.prototype.transition = function (state, event) {
-  const next_state_target =
-    this.machine.transitions[state.status][event] ?? state.status;
-  return {
-    ...state,
-    status: next_state_target,
-  };
-};
-
 Tile.prototype.hint = function () {
-  this.is_hinted = true;
+  this.state = this.state | T_HINT;
 };
 
-Tile.prototype.show = function (getChar) {
-  this.char = getChar(this.index);
-  this.state = this.transition(this.state, 'CHAR_RECEIVED');
+Tile.prototype.show = function (char) {
+  this.char = char;
+  this.state = this.state | T_IDLE;
+  this.render = true;
+};
+
+Tile.prototype.select = function () {
+  this.state = this.state | T_USE;
+};
+
+Tile.prototype.complete = function () {
+  this.state = this.state | T_COMPLETE;
 };
 
 Tile.prototype.getKey = function (index) {
@@ -58,6 +42,7 @@ function TileView(position, handler) {
   this.position = position;
   this.handler = handler;
   this.root_el = document.querySelector(this.getKey());
+  this.base_el = this.root_el.querySelector('rect.layer--base');
   this.text_el = this.root_el.querySelector('text');
   this.addListeners(handler);
 }
@@ -73,6 +58,15 @@ TileView.prototype.addListeners = function (handler) {
   this.root_el.addEventListener('touchend', handler, false);
 };
 
+TileView.prototype.draw = function (tile) {
+  if (tile.render) {
+    if (tile.state & T_IDLE) {
+      this.base_el.setAttribute('mask', 'url(#mask-a)');
+    }
+    tile.render = false;
+  }
+};
+
 TileView.prototype.drawText = function (char) {
   this.text_el.textContent = char;
 };
@@ -83,10 +77,11 @@ TileView.prototype.setState = function (class_name, is_active) {
 };
 
 TileView.prototype.drawState = function (
-  is_pressed: boolean,
-  is_char: boolean,
-  is_char_in_use: boolean,
-  is_hinted: boolean
+  is_pressed,
+  is_char,
+  is_char_in_use,
+  is_hinted,
+  tile
 ) {
   this.setState('state--pressed', is_pressed);
   this.setState('state--active', is_char);
@@ -286,7 +281,10 @@ function initTiles(max_chars) {
   const tiles = [];
   for (let i = 0; i < max_chars; ++i) {
     const tile = new Tile(i);
-    tile.show(getChar);
+    const tile_char = getChar(i);
+    if (tile_char) {
+      tile.show(tile_char);
+    }
     tiles.push(tile);
   }
   return tiles;
@@ -322,7 +320,7 @@ function handleClick(target) {
   }
 }
 
-function addInput(char_index: number): boolean {
+function addInput(char_index) {
   if (input_indices.length < max_chars) {
     input_indices.push(char_index);
     return true;
@@ -377,7 +375,10 @@ function advanceLevel() {
   if (game_level < max_chars - 3) {
     ++game_level;
     const tile = tiles[game_level + 2];
-    tile.show(getChar);
+    const tile_char = getChar(tile.index);
+    if (tile_char) {
+      tile.show(tile_char);
+    }
 
     const plumtexts = ['Sweet', 'Excellent', 'Amazing', 'Incredible', 'Superb'];
 
@@ -490,6 +491,7 @@ function draw() {
     const tile = tiles[i];
     const tile_view = tile_view_map[tile.getKey(i)];
 
+    tile_view.draw(tile);
     tile_view.drawText(tile.char);
     tile_view.drawState(
       tile.is_pressed,
