@@ -147,7 +147,7 @@ let all_time_streak = `All-time ${best_streak}`;
 let total_played = '0';
 let game_result = `Zigga ${game_no} ${today_score}\n`;
 const text_mask_el = document.querySelector('#mask-b');
-const text_mask_animate_el = text_mask_el.querySelector('animateTransform');
+const text_mask_animate_el = text_mask_el.querySelector('#mask-b-animate');
 
 main();
 
@@ -407,7 +407,6 @@ function advanceLevel() {
     ++game_level;
     const tile = tiles[game_level + 2];
     for (let i = 0; i < tiles.length; ++i) {
-      console.log(tiles[i]);
       if (tiles[i].state & (T_IDLE | T_USE)) {
         tiles[i].complete();
       }
