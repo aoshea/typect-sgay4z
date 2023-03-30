@@ -8,30 +8,33 @@ const T_COMPLETE = 1 << 3;
 const T_HINT = 1 << 4;
 
 function Tile(index) {
-  this.addState(T_EMPTY);
+  this.state = T_EMPTY;
   this.index = index;
 }
 
-Tile.prototype.addState = function (newState) {
+Tile.prototype.updateState = function (newState) {
   this.prev_state = this.state;
-  this.state = this.state | newState;
+  this.state = newState;
+  console.log(this.index, 'this.state', this.state);
 };
 
 Tile.prototype.hint = function () {
-  this.addState(T_HINT);
+  this.updateState(this.state | T_HINT);
 };
 
 Tile.prototype.show = function (char) {
   this.char = char;
-  this.addState(T_IDLE);
+  let newState = this.state | T_IDLE; // add idle state
+  newState = newState & ~T_EMPTY; // remove empty state
+  this.updateState(newState);
 };
 
 Tile.prototype.select = function () {
-  this.addState(T_USE);
+  this.updateState(this.state | T_USE);
 };
 
 Tile.prototype.complete = function () {
-  this.addState(T_COMPLETE);
+  this.updateState(this.state | T_COMPLETE);
 };
 
 Tile.prototype.getKey = function (index) {
@@ -43,6 +46,7 @@ Tile.prototype.update = function () {
 };
 
 function TileView(position, handler) {
+  this.timeout = null;
   this.position = position;
   this.handler = handler;
   this.root_el = document.querySelector(this.getKey());
@@ -64,11 +68,19 @@ TileView.prototype.addListeners = function (handler) {
 
 TileView.prototype.draw = function (tile) {
   if (tile.state !== tile.prev_state) {
-    console.log('draw state', tile.state, tile.state & T_IDLE);
     if (tile.state & T_IDLE) {
-      console.log('WILL DRAW', tile.state, tile.state & T_IDLE);
-      this.base_el.setAttribute('mask', 'url(#mask-a)');
+      console.log('will draw');
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+      }
+      this.timeout = setTimeout(() => {
+        // this.base_el.setAttribute('mask', 'url(#mask-a)');
+      }, this.position * 100);
+      // this.setState('state--idle', true);
     }
+    this.setState('state--empty', tile.state & T_EMPTY);
+    this.setState('state--idle', tile.state & T_IDLE);
     tile.prev_state = tile.state;
   }
 };
@@ -89,10 +101,12 @@ TileView.prototype.drawState = function (
   is_hinted,
   tile
 ) {
+  /*
   this.setState('state--pressed', is_pressed);
   this.setState('state--active', is_char);
   this.setState('state--in-use', is_char_in_use);
   this.setState('state--hinted', is_hinted);
+  */
 };
 
 // Will be set by template

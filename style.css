@@ -191,7 +191,7 @@ ol li:nth-child(3) {
   flex-basis: 100%;
 }
 
-rect.layer--base {
+.layer--base {
   fill: orange;
   stroke: none;
 }
@@ -210,7 +210,7 @@ rect.layer--overlay {
   opacity: 0;
 }
 
-.state--active > rect.layer--base {
+.state--active > .layer--base {
   fill: orange;
 }
 
