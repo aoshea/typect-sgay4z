@@ -23,7 +23,9 @@ Tile.prototype.hint = function () {
 };
 
 Tile.prototype.end = function () {
-  this.updateState(this.state | T_END);
+  let newState = this.state | T_END; // add end state
+  newState = newState & ~T_COMPLETE; // remove complete state
+  this.updateState(newState);
 };
 
 Tile.prototype.show = function (char) {
@@ -38,7 +40,9 @@ Tile.prototype.select = function () {
 };
 
 Tile.prototype.complete = function () {
-  this.updateState(this.state | T_COMPLETE);
+  let newState = this.state | T_COMPLETE; // add compelte state
+  newState = newState & ~T_IDLE; // remove idle state
+  this.updateState(newState);
 };
 
 Tile.prototype.getKey = function (index) {
@@ -56,6 +60,8 @@ function TileView(position, handler) {
   this.root_el = document.querySelector(this.getKey());
   this.base_el = this.root_el.querySelector('polygon.layer--base');
   this.base_animate_el = this.base_el.querySelector('animate');
+  this.text_mask_el = this.root_el.querySelector('polygon.layer--mask');
+  this.text_mask_animate_el = this.text_mask_el.querySelector('animate');
   this.text_el = this.root_el.querySelector('text');
   this.addListeners(handler);
 }
@@ -74,7 +80,7 @@ TileView.prototype.addListeners = function (handler) {
 TileView.prototype.draw = function (tile) {
   if (tile.state !== tile.prev_state) {
     if (tile.state & T_IDLE) {
-      // this.text_el.setAttribute('mask', 'url(#mask-b)');
+      this.text_mask_animate_el.beginElement();
     }
     if (tile.state & (T_COMPLETE | T_END)) {
       if (this.timeout) {
@@ -82,11 +88,12 @@ TileView.prototype.draw = function (tile) {
         this.timeout = null;
       }
       this.base_animate_el.beginElement();
-      this.timeout = setTimeout(() => {
-        // this.base_animate_el.beginElement();
-        // this.base_el.setAttribute('mask', 'url(#mask-a)');
-      }, this.position * 100);
-      // this.setState('state--idle', true);
+
+      if (tile.state & T_END) {
+        this.timeout = setTimeout(() => {
+          this.text_mask_animate_el.beginElement();
+        }, this.position * 200 + 200);
+      }
     }
     this.setState('state--empty', tile.state & T_EMPTY);
     this.setState('state--idle', tile.state & T_IDLE);
@@ -426,8 +433,6 @@ function advanceLevel() {
   updateStats();
   showPlum(game_level);
 
-
-
   if (game_level < max_chars - 3) {
     for (let i = 0; i < tiles.length; ++i) {
       if (tiles[i].state & (T_IDLE | T_USE)) {
@@ -441,13 +446,13 @@ function advanceLevel() {
       tile.show(tile_char);
     }
   } else {
-
     for (let i = 0; i < tiles.length; ++i) {
       if (tiles[i].state & (T_IDLE | T_USE | T_COMPLETE)) {
         tiles[i].end();
       }
     }
-    setTimeout(toggleStats, 2000);
+
+    setTimeout(toggleStats, 3000);
   }
 }
 
