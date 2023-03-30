@@ -8,26 +8,30 @@ const T_COMPLETE = 1 << 3;
 const T_HINT = 1 << 4;
 
 function Tile(index) {
-  this.state = T_EMPTY;
+  this.setState(T_EMPTY);
   this.index = index;
 }
 
+Tile.prototype.addState = function (newState) {
+  this.prev_state = this.state;
+  this.state = this.state | newState;
+};
+
 Tile.prototype.hint = function () {
-  this.state = this.state | T_HINT;
+  this.addState(T_HINT);
 };
 
 Tile.prototype.show = function (char) {
   this.char = char;
-  this.state = this.state | T_IDLE;
-  this.render = true;
+  this.addState(T_IDLE);
 };
 
 Tile.prototype.select = function () {
-  this.state = this.state | T_USE;
+  this.addState(T_USE);
 };
 
 Tile.prototype.complete = function () {
-  this.state = this.state | T_COMPLETE;
+  this.addState(T_COMPLETE);
 };
 
 Tile.prototype.getKey = function (index) {
@@ -59,11 +63,11 @@ TileView.prototype.addListeners = function (handler) {
 };
 
 TileView.prototype.draw = function (tile) {
-  if (tile.render) {
+  if (tile.state !== tile.prev_state) {
     if (tile.state & T_IDLE) {
       this.base_el.setAttribute('mask', 'url(#mask-a)');
     }
-    tile.render = false;
+    tile.prev_state = tile.state;
   }
 };
 
