@@ -197,6 +197,11 @@ ol li:nth-child(3) {
   stroke: none;
 }
 
+.layer--mask {
+  fill: white;
+  stroke: none;
+}
+
 rect.layer--edge {
   fill: transparent;
   stroke: black;
