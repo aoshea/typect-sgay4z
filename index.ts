@@ -8,7 +8,7 @@ const T_COMPLETE = 1 << 3;
 const T_HINT = 1 << 4;
 
 function Tile(index) {
-  this.setState(T_EMPTY);
+  this.addState(T_EMPTY);
   this.index = index;
 }
 
@@ -64,6 +64,7 @@ TileView.prototype.addListeners = function (handler) {
 
 TileView.prototype.draw = function (tile) {
   if (tile.state !== tile.prev_state) {
+    console.log('draw state', tile.state, tile.state & T_IDLE);
     if (tile.state & T_IDLE) {
       this.base_el.setAttribute('mask', 'url(#mask-a)');
     }
