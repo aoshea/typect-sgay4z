@@ -21,7 +21,7 @@ body {
 }
 
 body {
-  background: #f0f0f0;
+  background: #f5f5f5;
   touch-action: manipulation;
 }
 
@@ -39,7 +39,7 @@ button {
   background: rgba(0, 0, 0, 0.8);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   font-family: var(--font-stack);
   font-size: var(--font-size);
   font-weight: var(--font-weight);
@@ -56,7 +56,7 @@ button.secondary {
 }
 
 button.tertiary {
-  background: pink;
+  background: white;
   color: black;
 }
 
@@ -224,8 +224,17 @@ rect.layer--overlay {
   fill: gray;
 }
 
-.state--hinted > rect.layer--base {
-  fill: transparent;
+.state--hint > .layer--base {
+  fill: white;
+}
+
+.state--hint > text {
+  opacity: 0.5;
+}
+
+.state--hint > .layer--edge {
+  stroke: gray;
+  stroke-opacity: 0.5;
 }
 
 text {

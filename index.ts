@@ -79,24 +79,23 @@ TileView.prototype.addListeners = function (handler) {
 
 TileView.prototype.draw = function (tile) {
   if (tile.state !== tile.prev_state) {
-    if (tile.state & T_IDLE) {
-      this.text_mask_animate_el.beginElement();
-    }
-    if (tile.state & (T_COMPLETE | T_END)) {
-      if (this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
+    if (tile.state & T_HINT) {
+      console.log('in hint');
+    } else {
+      if (tile.state & T_IDLE) {
+        this.text_mask_animate_el.beginElement();
       }
-      this.base_animate_el.beginElement();
+      if (tile.state & (T_COMPLETE | T_END)) {
+        this.base_animate_el.beginElement();
 
-      if (tile.state & T_END) {
-        this.timeout = setTimeout(() => {
+        if (tile.state & T_END) {
           this.text_mask_animate_el.beginElement();
-        }, this.position * 200 + 200);
+        }
       }
     }
     this.setState('state--empty', tile.state & T_EMPTY);
     this.setState('state--idle', tile.state & T_IDLE);
+    this.setState('state--hint', tile.state & T_HINT);
     tile.prev_state = tile.state;
   }
 };
@@ -138,7 +137,8 @@ let touch = false;
 let input_indices = [];
 let tiles = [];
 let tile_view_map = {};
-let input_view = null;
+const input_view = document.querySelector('#text-input tspan');
+const input_view_animate = document.querySelector('#text-input-animate');
 let wordsets = [];
 let answers = new Map();
 let max_chars = 0;
@@ -182,7 +182,6 @@ function main() {
   answers = initAnswers(info);
   tiles = initTiles(max_chars);
   tile_view_map = initTileViews(max_chars, inputHandler);
-  input_view = document.querySelector('#text-input');
 
   updateStats();
 
@@ -387,12 +386,18 @@ function handleDelete() {
 }
 
 function getAvailableTileCount(list) {
-  return list.reduce((prev, curr) => (curr.char !== '' ? prev + 1 : prev), 0);
+  return list.reduce((count, tile) => {
+    if (typeof tile.char !== 'undefined' && tile.char !== '') {
+      return count + 1;
+    }
+    return count;
+  }, 0);
 }
 
 function randomizeTiles(list) {
   let arr = list.slice(0);
   let n = getAvailableTileCount(arr);
+  console.log('n', n);
   let temp;
   let random_index: number;
   while (n) {

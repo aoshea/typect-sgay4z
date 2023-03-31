@@ -82,7 +82,24 @@
             x="0"
             y="1"
           >
-            INPUT
+            <tspan>INPUT</tspan>
+            <animate
+              id="text-input-animate"
+              attributeName="x"
+              from="0"
+              to="0"
+              begin="indefinite"
+              fill="freeze"
+              dur="2s"
+              values="0;-3;3;-2;2;0"
+              keySplines="
+              0.33 0.12 0.64 0.94;
+              0.33 0.12 0.64 0.94;
+              0.33 0.12 0.64 0.94;
+              0.33 0.12 0.64 0.94;
+              0.33 0.12 0.64 0.94"
+              calcMode="spline"
+            />
           </text>
         </g>
         <g transform="translate(50, 60)">
@@ -227,17 +244,23 @@
               <animate
                 id="poly-6-animate"
                 attributeName="points"
-                from="-8,-8 8,-8 8,8 -8,8"
-                to="8,-8 8,-8 8,8 8,8"
+                from="0,-8 0,-8 0,8 0,8"
+                to="-8,-8 8,-8 8,8 -8,8"
                 begin="indefinite"
                 repeatCount="1"
                 fill="freeze"
                 dur="2s"
                 values="
-                -8,-8 8,-8 8,8 -6,8;
-                8,-8 8,-8 8,8 8,8;"
+        -8,-8 -8,-8 -8,8 -8,8;
+        -8,-8 -4,-8 -8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8;
+        -8,-8 8,-8 8,8 -8,8"
                 keySplines="
-          0.1 0.8 0.2 1;"
+  0.1 0.8 0.2 1;
+  0.1 0.8 0.2 1;
+  0.4 0.8 0.2 1;
+  0.9 0.3 0.8 1"
                 calcMode="spline"
               />
             </polygon>
