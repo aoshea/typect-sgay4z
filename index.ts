@@ -43,14 +43,6 @@ Tile.prototype.show = function (char) {
   this.updateState(newState);
 };
 
-Tile.prototype.select = function () {
-  this.updateState(this.state | T_USE);
-};
-
-Tile.prototype.deselect = function () {
-  this.updateState(this.state & ~T_USE);
-};
-
 Tile.prototype.complete = function () {
   let newState = this.state | T_COMPLETE; // add compelte state
   newState = newState & ~T_IDLE; // remove idle state
@@ -108,47 +100,20 @@ TileView.prototype.focus = function () {
 };
 
 TileView.prototype.draw = function (tile) {
-  // tile.hasStateChage(T_USE);
   if (tile.transitioned()) {
-    if (tile.transitionTo(T_IDLE)) {
+    if (tile.transitionTo(T_COMPLETE | T_END)) {
+      this.base_animate_el.beginElement();
+    }
+    if (tile.transitionTo(T_IDLE | T_END)) {
       this.text_mask_animate_el.beginElement();
     }
-    tile.prev_state = tile.state;
-  }
-  /*
-  if (tile.transitionTo(T_USE)) {
 
-  } else if (tile.transitionTo(T_HINT)) {
-
-  } else if (tile.transitionTo(T_IDLE)) {
-
-  }
-  if (tile.state !== tile.prev_state) {
-
-    if (tile.state & T_USE) {
-      console.log('in use!');
-    } else if (tile.state & T_HINT) {
-      console.log('in hint!');
-    } else {
-      if (tile.state & T_IDLE) {
-        console.log('idle!');
-        this.text_mask_animate_el.beginElement();
-      }
-      if (tile.state & (T_COMPLETE | T_END)) {
-        this.base_animate_el.beginElement();
-
-        if (tile.state & T_END) {
-          this.text_mask_animate_el.beginElement();
-        }
-      }
-    }
     this.setState('state--use', tile.state & T_USE);
     this.setState('state--empty', tile.state & T_EMPTY);
     this.setState('state--idle', tile.state & T_IDLE);
     this.setState('state--hint', tile.state & T_HINT);
     tile.prev_state = tile.state;
   }
-  */
 };
 
 TileView.prototype.drawText = function (char) {
@@ -464,7 +429,6 @@ function handleClick(target) {
 
   if (input_indices.indexOf(tile.index) === -1) {
     addInput(tile.index);
-    tile.select();
   }
 }
 
@@ -476,17 +440,8 @@ function addInput(char_index) {
   return false;
 }
 
-function deselectTileByIndex(index) {
-  const tile = tiles.find((x) => x.index === index);
-  if (tile) {
-    tile.deselect();
-  }
-}
-
 function handleDelete() {
   if (input_indices.length > 0) {
-    const last_index = input_indices[input_indices.length - 1];
-    deselectTileByIndex(last_index);
     input_indices.pop();
   }
 }
@@ -696,7 +651,6 @@ function getInputValue() {
 
 function clearInput() {
   while (input_indices.length > 0) {
-    deselectTileByIndex(input_indices[input_indices.length - 1]);
     input_indices.pop();
   }
 }
