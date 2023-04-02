@@ -7,6 +7,7 @@ const T_USE = 1 << 2;
 const T_COMPLETE = 1 << 3;
 const T_HINT = 1 << 4;
 const T_END = 1 << 5;
+const T_SHUFFLE = 1 << 6;
 
 function Tile(index) {
   this.state = T_EMPTY;
@@ -41,6 +42,12 @@ Tile.prototype.show = function (char) {
   let newState = this.state | T_IDLE; // add idle state
   newState = newState & ~T_EMPTY; // remove empty state
   this.updateState(newState);
+};
+
+Tile.prototype.shuffle = function () {
+  console.log('this.state', this.state);
+  this.updateState(this.state ^ T_SHUFFLE);
+  console.log('now state', this.state);
 };
 
 Tile.prototype.complete = function () {
@@ -237,7 +244,7 @@ function getTileIcon(position) {
   if (!tile) return c;
   if (tile.state & T_HINT) {
     return b;
-  } else if (tile.state & T_COMPLETE) {
+  } else if (tile.state & (T_COMPLETE | T_END)) {
     return a;
   } else {
     return c;
@@ -506,6 +513,8 @@ function handleShuffle() {
     }
     ++iterations;
   }
+
+  tiles.forEach((tile) => tile.shuffle());
 }
 
 function showPlum(index) {
@@ -535,7 +544,6 @@ function advanceLevel() {
   } else {
     for (let i = 0; i < tiles.length; ++i) {
       if (tiles[i].state & (T_IDLE | T_USE | T_COMPLETE)) {
-        tiles[i].complete();
         tiles[i].end();
       }
     }
