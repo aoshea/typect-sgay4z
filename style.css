@@ -66,13 +66,7 @@ button.modal {
   padding: 0.25rem 0.5rem;
 }
 
-.typo--h1 {
-  font-size: 16px;
-  text-decoration: dashed;
-}
-
 .typo--h1 span {
-  font-size: 16px;
   color: orange;
 }
 
@@ -228,7 +222,17 @@ rect.layer--overlay {
   stroke: orange;
   stroke-linecap: butt;
   fill: transparent;
+  animation-duration: 1s;
+  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation-delay: 0;
+  animation-iteration-count: 1;
+  animation-play-state: running;
+  animation-fill-mode: forwards;
   opacity: 0;
+}
+
+.state--focus > .layer--overlay {
+  animation-name: showfocus;
 }
 
 .state--active > .layer--base {
@@ -242,12 +246,12 @@ rect.layer--overlay {
 .state--hint > .layer--base {
   fill: white;
 }
+.state--hint > .layer--mask {
+  fill: white;
+}
 
 .state--hint > .layer--edge {
   stroke: gray;
-}
-.state--hint > text {
-  fill: gray;
 }
 
 text {
@@ -275,6 +279,8 @@ text#plum {
   animation-iteration-count: 1;
   animation-play-state: running;
   animation-fill-mode: forwards;
+  pointer-events: none;
+  user-select: none;
 }
 
 text#plum.show {
@@ -301,6 +307,24 @@ text#plum.show {
     opacity: 0;
     transform: translate3d(20px, 0, 0);
     -webkit-transform: translate3d(20px, 0, 0);
+  }
+}
+
+@keyframes showfocus {
+  0% {
+    opacity: 0;
+    transform: scale3d(1, 1, 1);
+    -webkit-transform: scale3d(1, 1, 1);
+  }
+  10% {
+    opacity: 0.5;
+    transform: scale3d(1.05, 1.05, 1.05);
+    -webkit-transform: scale3d(1.05, 1.05, 1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: scale3d(1, 1, 1);
+    -webkit-transform: scale3d(1, 1, 1);
   }
 }
 

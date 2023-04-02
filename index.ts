@@ -5,8 +5,8 @@ const T_EMPTY = 1 << 0;
 const T_IDLE = 1 << 1;
 const T_USE = 1 << 2;
 const T_COMPLETE = 1 << 3;
-const T_END = 1 << 5;
 const T_HINT = 1 << 4;
+const T_END = 1 << 5;
 
 function Tile(index) {
   this.state = T_EMPTY;
@@ -18,14 +18,22 @@ Tile.prototype.updateState = function (newState) {
   this.state = newState;
 };
 
+Tile.prototype.transitioned = function () {
+  return this.state !== this.prev_state;
+};
+
+Tile.prototype.transitionTo = function (newState) {
+  const inPrevState = this.prev_state & newState;
+  const inState = this.state & newState;
+  return inState && !inPrevState;
+};
+
 Tile.prototype.hint = function () {
   this.updateState(this.state | T_HINT);
 };
 
 Tile.prototype.end = function () {
-  let newState = this.state | T_END; // add end state
-  newState = newState & ~T_COMPLETE; // remove complete state
-  this.updateState(newState);
+  this.updateState(this.state | T_END);
 };
 
 Tile.prototype.show = function (char) {
@@ -37,6 +45,10 @@ Tile.prototype.show = function (char) {
 
 Tile.prototype.select = function () {
   this.updateState(this.state | T_USE);
+};
+
+Tile.prototype.deselect = function () {
+  this.updateState(this.state & ~T_USE);
 };
 
 Tile.prototype.complete = function () {
@@ -58,6 +70,11 @@ function TileView(position) {
   this.position = position;
   this.root_el = document.querySelector(this.getKey());
   this.base_el = this.root_el.querySelector('polygon.layer--base');
+  this.overlay_el = this.root_el.querySelector('rect.layer--overlay');
+  this.overlay_el.addEventListener(
+    'animationend',
+    this.handleOverlayAnimationEnd.bind(this)
+  );
   this.base_animate_el = this.base_el.querySelector('animate');
   this.text_mask_el = this.root_el.querySelector('polygon.layer--mask');
   this.text_mask_animate_el = this.text_mask_el.querySelector('animate');
@@ -82,12 +99,39 @@ TileView.prototype.removeListeners = function (handler) {
   this.root_el.addEventListener('touchend', handler, true);
 };
 
+TileView.prototype.handleOverlayAnimationEnd = function () {
+  this.setState('state--focus', false);
+};
+
+TileView.prototype.focus = function () {
+  this.setState('state--focus', true);
+};
+
 TileView.prototype.draw = function (tile) {
+  // tile.hasStateChage(T_USE);
+  if (tile.transitioned()) {
+    if (tile.transitionTo(T_IDLE)) {
+      this.text_mask_animate_el.beginElement();
+    }
+    tile.prev_state = tile.state;
+  }
+  /*
+  if (tile.transitionTo(T_USE)) {
+
+  } else if (tile.transitionTo(T_HINT)) {
+
+  } else if (tile.transitionTo(T_IDLE)) {
+
+  }
   if (tile.state !== tile.prev_state) {
-    if (tile.state & T_HINT) {
-      console.log('in hint');
+
+    if (tile.state & T_USE) {
+      console.log('in use!');
+    } else if (tile.state & T_HINT) {
+      console.log('in hint!');
     } else {
       if (tile.state & T_IDLE) {
+        console.log('idle!');
         this.text_mask_animate_el.beginElement();
       }
       if (tile.state & (T_COMPLETE | T_END)) {
@@ -98,11 +142,13 @@ TileView.prototype.draw = function (tile) {
         }
       }
     }
+    this.setState('state--use', tile.state & T_USE);
     this.setState('state--empty', tile.state & T_EMPTY);
     this.setState('state--idle', tile.state & T_IDLE);
     this.setState('state--hint', tile.state & T_HINT);
     tile.prev_state = tile.state;
   }
+  */
 };
 
 TileView.prototype.drawText = function (char) {
@@ -112,21 +158,6 @@ TileView.prototype.drawText = function (char) {
 TileView.prototype.setState = function (class_name, is_active) {
   const fn = is_active ? 'add' : 'remove';
   this.root_el.classList[fn](class_name);
-};
-
-TileView.prototype.drawState = function (
-  is_pressed,
-  is_char,
-  is_char_in_use,
-  is_hinted,
-  tile
-) {
-  /*
-  this.setState('state--pressed', is_pressed);
-  this.setState('state--active', is_char);
-  this.setState('state--in-use', is_char_in_use);
-  this.setState('state--hinted', is_hinted);
-  */
 };
 
 // Will be set by template
@@ -206,8 +237,7 @@ function main() {
   gameloop();
 }
 
-function handleInputAnimateBeginEvent(event) {
-  console.log('input naimate beinag');
+function handleInputAnimateBeginEvent() {
   // disable all interaction
   Object.values(tile_view_map).forEach((tile_view) => {
     tile_view.removeListeners(inputHandler);
@@ -215,8 +245,7 @@ function handleInputAnimateBeginEvent(event) {
   removeGameListeners();
 }
 
-function handleInputAnimateEndEvent(event) {
-  console.log('input naimate end');
+function handleInputAnimateEndEvent() {
   clearInput();
   // enable all interaction
   Object.values(tile_view_map).forEach((tile_view) => {
@@ -234,11 +263,11 @@ function getStorageItem(key) {
   return item;
 }
 
-function buildGameResult(game_no, input_len, max_chars) {
+function buildGameResult(game_no, complete_count, max_chars) {
   let a = '\uD83D\uDFE7';
   let b = '\u2B1C';
   let c = '\u2B1B';
-  let result = `Zigga ${game_no} ${input_len}/${max_chars}\n`;
+  let result = `Zigga ${game_no} ${complete_count}/${max_chars}\n`;
   result += '    ' + a + '\n';
   result += '  ' + a + a + a + '\n';
   result += ' ' + a + b + a + a + '\n';
@@ -246,10 +275,12 @@ function buildGameResult(game_no, input_len, max_chars) {
 }
 
 function updateStats() {
+  const complete_count = getCompleteCount();
+
   document.querySelector('#game-no > span').textContent = `Game ${game_no}`;
-  today_score = 'Result 3/8';
+  today_score = `Result ${complete_count}/${max_chars}`;
   document.querySelector('#today-score').textContent = today_score;
-  today_hints = `Hints ${hints}/3`;
+  today_hints = `Hints ${3 - hints}/3`;
   document.querySelector('#today-hints').textContent = today_hints;
 
   streak = getStorageItem('z-streak');
@@ -267,7 +298,7 @@ function updateStats() {
   game_result = `Game ${game_no} ${today_score}\n \uD83D\uDFE7`;
   document.querySelector('#share-result').textContent = buildGameResult(
     game_no,
-    input_indices.length,
+    complete_count,
     max_chars
   );
 }
@@ -355,6 +386,14 @@ function getMaxChars(wordsets) {
   );
 }
 
+function getCompleteCount() {
+  const complete_count = tiles.reduce((count, tile) => {
+    return tile.state & T_COMPLETE ? count + 1 : count;
+  }, 0);
+  console.log('c', complete_count);
+  return complete_count;
+}
+
 function initAnswers(info) {
   const answers = info.split(',')[1].split('|');
   return groupAnswersByLen(answers);
@@ -420,9 +459,12 @@ function inputHandler(e) {
 function handleClick(target) {
   const elementPosition = parseInt(target.id.split('-')[1], 10);
   const tile = tiles[elementPosition];
-  tile.is_pressed = true;
+  const tile_view = tile_view_map[tile.getKey(elementPosition)];
+  tile_view.focus();
+
   if (input_indices.indexOf(tile.index) === -1) {
     addInput(tile.index);
+    tile.select();
   }
 }
 
@@ -434,8 +476,17 @@ function addInput(char_index) {
   return false;
 }
 
+function deselectTileByIndex(index) {
+  const tile = tiles.find((x) => x.index === index);
+  if (tile) {
+    tile.deselect();
+  }
+}
+
 function handleDelete() {
   if (input_indices.length > 0) {
+    const last_index = input_indices[input_indices.length - 1];
+    deselectTileByIndex(last_index);
     input_indices.pop();
   }
 }
@@ -452,7 +503,6 @@ function getAvailableTileCount(list) {
 function randomizeTiles(list) {
   let arr = list.slice(0);
   let n = getAvailableTileCount(arr);
-  console.log('n', n);
   let temp;
   let random_index: number;
   while (n) {
@@ -621,12 +671,6 @@ function draw() {
 
     tile_view.draw(tile);
     tile_view.drawText(tile.char);
-    tile_view.drawState(
-      tile.is_pressed,
-      tile.char !== '',
-      input_indices.indexOf(tile.index) !== -1,
-      tile.is_hinted
-    );
   }
   ++t;
   renderInput();
@@ -652,6 +696,7 @@ function getInputValue() {
 
 function clearInput() {
   while (input_indices.length > 0) {
+    deselectTileByIndex(input_indices[input_indices.length - 1]);
     input_indices.pop();
   }
 }
