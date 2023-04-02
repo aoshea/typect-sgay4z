@@ -169,6 +169,14 @@ dl {
   padding: 0;
 }
 
+dt {
+  padding-top: 0.5rem;
+  padding-bottom: 0.25rem;
+}
+dd {
+  margin-left: 0.5rem;
+}
+
 ol li:nth-child(1) {
   text-align: left;
 }

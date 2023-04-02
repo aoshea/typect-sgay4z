@@ -228,14 +228,36 @@ function getStorageItem(key) {
   return item;
 }
 
+function getTileIcon(position) {
+  let a = '\uD83D\uDFE7';
+  let b = '\u2B1C';
+  let c = '\u2B1B';
+
+  const tile = tiles.find((el) => el.index === position);
+  if (!tile) return c;
+  if (tile.state & T_HINT) {
+    return b;
+  } else if (tile.state & T_COMPLETE) {
+    return a;
+  } else {
+    return c;
+  }
+}
+
 function buildGameResult(game_no, complete_count, max_chars) {
   let a = '\uD83D\uDFE7';
   let b = '\u2B1C';
   let c = '\u2B1B';
   let result = `Zigga ${game_no} ${complete_count}/${max_chars}\n`;
-  result += '    ' + a + '\n';
-  result += '  ' + a + a + a + '\n';
-  result += ' ' + a + b + a + a + '\n';
+  result += '    ' + getTileIcon(7) + '\n';
+  result += '  ' + getTileIcon(4) + getTileIcon(5) + getTileIcon(6) + '\n';
+  result +=
+    ' ' +
+    getTileIcon(0) +
+    getTileIcon(1) +
+    getTileIcon(2) +
+    getTileIcon(3) +
+    '\n';
   return result;
 }
 
@@ -513,6 +535,7 @@ function advanceLevel() {
   } else {
     for (let i = 0; i < tiles.length; ++i) {
       if (tiles[i].state & (T_IDLE | T_USE | T_COMPLETE)) {
+        tiles[i].complete();
         tiles[i].end();
       }
     }
