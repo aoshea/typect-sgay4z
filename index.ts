@@ -210,7 +210,7 @@ function buildGameResult(game_no, input_len, max_chars) {
 }
 
 function updateStats() {
-  document.querySelector('#game-no').textContent = `Game ${game_no}`;
+  document.querySelector('#game-no > span').textContent = `Game ${game_no}`;
   today_score = 'Result 3/8';
   document.querySelector('#today-score').textContent = today_score;
   today_hints = `Hints ${hints}/3`;

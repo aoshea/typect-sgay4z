@@ -67,10 +67,18 @@ button.modal {
 }
 
 .typo--h1 {
-  font-size: 14px;
+  font-size: 16px;
+  text-decoration: dashed;
 }
+
 .typo--h1 span {
-  color: orangered;
+  font-size: 16px;
+  color: orange;
+}
+
+.typo--btn {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
 }
 
 .drawer {
