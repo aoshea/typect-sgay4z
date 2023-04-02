@@ -66,6 +66,13 @@ button.modal {
   padding: 0.25rem 0.5rem;
 }
 
+.typo--h1 {
+  font-size: 14px;
+}
+.typo--h1 span {
+  color: orangered;
+}
+
 .drawer {
   position: absolute;
   top: 0;
