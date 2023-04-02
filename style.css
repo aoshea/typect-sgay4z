@@ -243,13 +243,11 @@ rect.layer--overlay {
   fill: white;
 }
 
-.state--hint > text {
-  opacity: 0.5;
-}
-
 .state--hint > .layer--edge {
   stroke: gray;
-  stroke-opacity: 0.5;
+}
+.state--hint > text {
+  fill: gray;
 }
 
 text {

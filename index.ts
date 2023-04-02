@@ -53,17 +53,15 @@ Tile.prototype.update = function () {
   return false;
 };
 
-function TileView(position, handler) {
+function TileView(position) {
   this.timeout = null;
   this.position = position;
-  this.handler = handler;
   this.root_el = document.querySelector(this.getKey());
   this.base_el = this.root_el.querySelector('polygon.layer--base');
   this.base_animate_el = this.base_el.querySelector('animate');
   this.text_mask_el = this.root_el.querySelector('polygon.layer--mask');
   this.text_mask_animate_el = this.text_mask_el.querySelector('animate');
   this.text_el = this.root_el.querySelector('text');
-  this.addListeners(handler);
 }
 
 TileView.prototype.getKey = function () {
@@ -71,10 +69,17 @@ TileView.prototype.getKey = function () {
 };
 
 TileView.prototype.addListeners = function (handler) {
-  this.root_el.addEventListener('mousedown', handler, false);
-  this.root_el.addEventListener('mouseup', handler, false);
-  this.root_el.addEventListener('touchstart', handler, false);
-  this.root_el.addEventListener('touchend', handler, false);
+  this.root_el.addEventListener('mousedown', handler, true);
+  this.root_el.addEventListener('mouseup', handler, true);
+  this.root_el.addEventListener('touchstart', handler, true);
+  this.root_el.addEventListener('touchend', handler, true);
+};
+
+TileView.prototype.removeListeners = function (handler) {
+  this.root_el.addEventListener('mousedown', handler, true);
+  this.root_el.addEventListener('mouseup', handler, true);
+  this.root_el.addEventListener('touchstart', handler, true);
+  this.root_el.addEventListener('touchend', handler, true);
 };
 
 TileView.prototype.draw = function (tile) {
@@ -139,6 +144,17 @@ let tiles = [];
 let tile_view_map = {};
 const input_view = document.querySelector('#text-input tspan');
 const input_view_animate = document.querySelector('#text-input-animate');
+input_view_animate.addEventListener(
+  'beginEvent',
+  handleInputAnimateBeginEvent,
+  true
+);
+input_view_animate.addEventListener(
+  'endEvent',
+  handleInputAnimateEndEvent,
+  true
+);
+
 let wordsets = [];
 let answers = new Map();
 let max_chars = 0;
@@ -176,7 +192,8 @@ main();
 
 function main() {
   setLayoutHeight();
-  addListeners();
+  addGlobalListeners();
+  addGameListeners();
   wordsets = initWordsets(info);
   max_chars = getMaxChars(wordsets);
   answers = initAnswers(info);
@@ -187,6 +204,25 @@ function main() {
 
   // start tick
   gameloop();
+}
+
+function handleInputAnimateBeginEvent(event) {
+  console.log('input naimate beinag');
+  // disable all interaction
+  Object.values(tile_view_map).forEach((tile_view) => {
+    tile_view.removeListeners(inputHandler);
+  });
+  removeGameListeners();
+}
+
+function handleInputAnimateEndEvent(event) {
+  console.log('input naimate end');
+  clearInput();
+  // enable all interaction
+  Object.values(tile_view_map).forEach((tile_view) => {
+    tile_view.addListeners(inputHandler);
+  });
+  addGameListeners();
 }
 
 function getStorageItem(key) {
@@ -236,7 +272,7 @@ function updateStats() {
   );
 }
 
-function addListeners() {
+function addGlobalListeners() {
   window.addEventListener('resize', setLayoutHeight);
   document
     .querySelector('button[name="stats"]')
@@ -245,20 +281,38 @@ function addListeners() {
     .querySelector('button[name="close-drawer"]')
     .addEventListener('click', handleClickStats, true);
   document
+    .querySelector('button[name="share"]')
+    .addEventListener('click', handleShare, true);
+}
+
+function addGameListeners() {
+  document
     .querySelector('button[name="delete"]')
-    .addEventListener('click', handleDelete, false);
+    .addEventListener('click', handleDelete, true);
   document
     .querySelector('button[name="shuffle"]')
-    .addEventListener('click', handleShuffle, false);
+    .addEventListener('click', handleShuffle, true);
   document
     .querySelector('button[name="hint"]')
-    .addEventListener('click', handleHint, false);
+    .addEventListener('click', handleHint, true);
   document
     .querySelector('button[name="enter"]')
-    .addEventListener('click', handleEnter, false);
+    .addEventListener('click', handleEnter, true);
+}
+
+function removeGameListeners() {
   document
-    .querySelector('button[name="share"]')
-    .addEventListener('click', handleShare, false);
+    .querySelector('button[name="delete"]')
+    .removeEventListener('click', handleDelete, true);
+  document
+    .querySelector('button[name="shuffle"]')
+    .removeEventListener('click', handleShuffle, true);
+  document
+    .querySelector('button[name="hint"]')
+    .removeEventListener('click', handleHint, true);
+  document
+    .querySelector('button[name="enter"]')
+    .removeEventListener('click', handleEnter, true);
 }
 
 function setLayoutHeight() {
@@ -322,7 +376,8 @@ function initAnswers(info) {
 function initTileViews(max_chars, handler) {
   const tile_view_map = {};
   for (let i = 0; i < max_chars; ++i) {
-    const view = new TileView(i, handler);
+    const view = new TileView(i);
+    view.addListeners(handler);
     tile_view_map[view.getKey()] = view;
   }
   return tile_view_map;
@@ -467,8 +522,13 @@ function handleEnter() {
   const input_value = getInputValue();
   if (game_level_answers.indexOf(input_value.toLowerCase()) !== -1) {
     advanceLevel();
+    clearInput();
+  } else {
+    // the wrong answer
+    // shake input and clear input on animate end
+    // prevent input until cleared
+    input_view_animate.beginElement();
   }
-  clearInput();
 }
 
 function handleHint() {
