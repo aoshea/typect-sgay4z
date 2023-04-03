@@ -240,7 +240,9 @@ function getTileIcon(position) {
   let b = '\u2B1C';
   let c = '\u2B1B';
 
-  const tile = tiles.find((el) => el.index === position);
+
+  
+  const tile = tiles[position];
   if (!tile) return c;
   if (tile.state & T_HINT) {
     return b;
